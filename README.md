@@ -70,10 +70,9 @@ lo propio del proyecto antes de commitear.
 - [x] `agents/deploy-checker` — reemplaza `checklist-lanzamiento.md`
 - [x] `skills/gsap-motion` (+ `references/scroll-parallax.md`)
 - [x] `skills/security-review` — de `cybersecurity.md`
+- [x] `agents/supabase-setup` — de `setup-supabase.md`
+- [x] `agents/vercel-deploy` — de `setup-vercel.md`
 - [ ] `skills/three-js` (de `three-js-patterns.md`)
-- [ ] `skills/glass-patterns`
-- [ ] `agents/supabase-setup` (de `setup-supabase.md`)
-- [ ] `agents/vercel-deploy` (de `setup-vercel.md`)
 - [ ] `commands/` — slash commands para flujos repetitivos
 - [ ] Evaluar agentes de VoltAgent/awesome-claude-code-subagents y
       VoltAgent/awesome-agent-skills (incluye la colección de Garry
