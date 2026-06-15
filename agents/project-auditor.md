@@ -80,3 +80,12 @@ sin proponer todavía cómo arreglarlo, solo señalarlo.
 Markdown con los headers de arriba, en ese orden. Si una sección no
 aplica (ej. "Integraciones" en un proyecto sin APIs externas), poner
 "N/A" y seguir — no inflar con relleno para llenar la sección.
+
+## AGENTS.md
+
+Si existe un `AGENTS.md` en la raíz del proyecto con contenido
+específico (no boilerplate genérico), señalarlo en "Decisiones no
+obvias" y asegurarse de que termine reflejado en `PROJECT_MEMORY.md`.
+`CLAUDE.md` no importa `AGENTS.md` automáticamente — si su contenido no
+queda en `PROJECT_MEMORY.md` (que sí se carga siempre vía
+`@PROJECT_MEMORY.md`), se pierde en la próxima sesión.

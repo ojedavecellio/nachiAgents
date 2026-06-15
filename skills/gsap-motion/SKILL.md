@@ -231,3 +231,10 @@ scroll horizontal y zoom estilo Apple/Linear: ver
 Si el hero usa Three.js (3D, partículas, shaders) y el scroll necesita
 controlar la cámara o la escena: ver el skill `three-js`, sección
 "Scroll de GSAP controlando la escena 3D".
+
+## Ver también
+
+Antes de armar un fondo, cursor o efecto de texto desde cero, chequear
+el skill `three-js` — sección "Antes de construir desde cero" — por si
+`@react-bits` ya tiene un componente equivalente instalable con
+`npx shadcn add`.

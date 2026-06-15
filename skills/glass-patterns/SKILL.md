@@ -174,3 +174,10 @@ aparecen en desktop — testear en dispositivo real. Para Nivel 1,
 `backdrop-filter: blur` no funciona si el padre tiene
 `overflow: hidden` en algunos browsers — si el blur desaparece sin
 razón, ese es el culpable.
+
+## Ver también
+
+Antes de armar un componente de glass interactivo desde cero, chequear
+el skill `three-js` — sección "Antes de construir desde cero" — por si
+`@react-bits` ya tiene un componente equivalente instalable con
+`npx shadcn add`.

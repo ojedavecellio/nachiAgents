@@ -310,3 +310,31 @@ Para fondo generativo con shader (más performante que partículas para
 efectos abstractos), modelo 3D de producto (GLB/GLTF), o integrar
 scroll de GSAP con la cámara/escena: ver
 `references/shaders-and-models.md`.
+
+## Antes de construir desde cero — chequear @react-bits
+
+Si `components.json` tiene configurado el registry `@react-bits`
+(`"registries": { "@react-bits": "https://reactbits.dev/r/{name}.json" }`),
+reactbits.dev probablemente ya tiene el componente que estás por
+construir — fondos de partículas, auroras, shaders, cursores, etc.
+Muchos están hechos con `ogl`, la misma lib liviana que usan los
+patrones de partículas de este skill como alternativa a R3F.
+
+Antes de escribir un componente custom:
+
+1. Si se conoce el nombre (o el usuario lo menciona, ej. "Aurora",
+   "Particles"), instalar con `npx shadcn add @react-bits/<Nombre>-TS-TW`
+   — el sufijo `-TS-TW` es la variante TypeScript + Tailwind, la que
+   corresponde a este stack.
+2. Si el nombre exacto no se conoce, probar variantes de capitalización
+   contra `https://reactbits.dev/r/<nombre>.json` antes de instalar —
+   un 200 que devuelve HTML (no JSON) significa que el nombre está mal,
+   no que el registry esté roto.
+3. Adaptar el componente instalado a las convenciones del proyecto:
+   agregar `"use client"` si falta, envolver con `useInViewport` (ver
+   agente `performance-auditor`), ajustar la paleta a las variables CSS
+   del proyecto.
+
+Si `components.json` no tiene el registry `@react-bits`, o el
+componente no existe ahí, recién entonces construir desde cero con los
+patrones de este skill.
