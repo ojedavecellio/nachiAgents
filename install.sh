@@ -26,7 +26,16 @@ case "$ARG1" in
     ;;
 esac
 
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolver symlinks: npx ejecuta esto vía node_modules/.bin/nachi-agents,
+# que es un symlink al install.sh real dentro de node_modules/nachi-agents/.
+# Sin esto, SRC apuntaría a .bin/ (que no tiene agents/, skills/, etc.)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SRC="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 
 if [ ! -d "$TARGET" ]; then
   echo "No existe el directorio: $TARGET"
