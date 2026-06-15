@@ -15,20 +15,24 @@ agentes antes de que terminen acá.
 
 ```
 nachiAgents/
-├── CLAUDE.md              ← contexto base, siempre activo
+├── CLAUDE.md              ← contexto base WEB, siempre activo (variante default)
 ├── templates/
-│   └── PROJECT_MEMORY.md  ← memoria viva del proyecto (importada por CLAUDE.md)
+│   ├── PROJECT_MEMORY.md       ← memoria viva del proyecto (importada por CLAUDE.md)
+│   ├── CLAUDE-mobile.md         ← variante Expo/React Native (Cal Buddies)
+│   └── CLAUDE-automation.md     ← variante Python/FastAPI (ctdApp, automatizaciones)
 ├── agents/                ← subagentes (instancias con tarea/tools propios)
 ├── skills/                ← playbooks que se cargan según la tarea
 ├── commands/              ← slash commands (vacío por ahora)
 └── install.sh             ← copia todo a .claude/ + raíz de un proyecto
 ```
 
-**CLAUDE.md** — equivalente a `base-stack.md`. Contexto que Claude Code
-carga siempre, en cada sesión, sin que lo pidas. Va en la raíz de cada
-proyecto (se adapta, no se symlinkea — cada proyecto tiene secciones
-propias: paletas, fuentes, dominios, etc.). Importa `PROJECT_MEMORY.md`
-con `@PROJECT_MEMORY.md`.
+**CLAUDE.md / templates/CLAUDE-\*.md** — equivalente a `base-stack.md` +
+`stack-web.md`/`stack-mobile.md`/`stack-automatizacion.md`. Contexto que
+Claude Code carga siempre, en cada sesión, sin que lo pidas. `install.sh`
+copia la variante que corresponda a la raíz del proyecto (se adapta, no
+se symlinkea — cada proyecto tiene secciones propias: paletas, fuentes,
+dominios, etc.). Las tres importan `PROJECT_MEMORY.md` con
+`@PROJECT_MEMORY.md`.
 
 **templates/PROJECT_MEMORY.md** — memoria viva y específica de cada
 proyecto (estado actual, decisiones, pendientes, gotchas). Se copia a
@@ -52,13 +56,16 @@ que hace que Claude Code los cargue solo cuando la tarea matchea.
 ## Cómo deployar en un proyecto
 
 ```bash
-./install.sh /ruta/al/proyecto
+./install.sh /ruta/al/proyecto              # variante web (default)
+./install.sh /ruta/a/CalBuddies mobile      # variante Expo/React Native
+./install.sh /ruta/a/ctdApp automation      # variante Python/FastAPI
 ```
 
 Esto copia `agents/` y `skills/` a `.claude/` del proyecto destino, y
-copia `CLAUDE.md` a la raíz **solo si no existe ya uno** (para no pisar
-contexto específico del proyecto). Revisar y completar `CLAUDE.md` con
-lo propio del proyecto antes de commitear.
+copia el `CLAUDE.md` de la variante elegida a la raíz **solo si no
+existe ya uno** (para no pisar contexto específico del proyecto).
+También copia `PROJECT_MEMORY.md` si no existe. Revisar y completar
+`CLAUDE.md` con lo propio del proyecto antes de commitear.
 
 ---
 
@@ -74,6 +81,11 @@ lo propio del proyecto antes de commitear.
 - [x] `agents/vercel-deploy` — de `setup-vercel.md`
 - [x] `skills/three-js` (+ `references/shaders-and-models.md`)
 - [x] `skills/glass-patterns` (+ `references/liquid-glass-implementation.md`)
+- [x] `skills/git-commits` — Conventional Commits, formato y atomicidad
+- [x] `agents/performance-auditor` — de `performance-lazy-mount.md`
+- [x] `templates/CLAUDE-mobile.md` — variante Expo/RN, de `stack-mobile.md`
+- [x] `templates/CLAUDE-automation.md` — variante Python/FastAPI, de `stack-automatizacion.md`
+- [x] `install.sh` — soporta variante `web|mobile|automation`
 - [ ] `commands/` — slash commands para flujos repetitivos
 - [ ] Evaluar agentes de VoltAgent/awesome-claude-code-subagents y
       VoltAgent/awesome-agent-skills (incluye la colección de Garry
