@@ -22,7 +22,7 @@ nachiAgents/
 │   └── CLAUDE-automation.md     ← variante Python/FastAPI (ctdApp, automatizaciones)
 ├── agents/                ← subagentes (instancias con tarea/tools propios)
 ├── skills/                ← playbooks que se cargan según la tarea
-├── commands/              ← slash commands (vacío por ahora)
+├── commands/              ← slash commands (/audit, /ship)
 └── install.sh             ← copia todo a .claude/ + raíz de un proyecto
 ```
 
@@ -49,7 +49,10 @@ checklist de lanzamiento).
 patrones (gsap-patterns, glass-patterns, etc.) pero con un `description`
 que hace que Claude Code los cargue solo cuando la tarea matchea.
 
-**commands/** — slash commands custom (`.claude/commands/`). Fase 2.
+**commands/** — slash commands custom (`.claude/commands/`). `/audit`
+encadena `project-auditor` con la actualización de `PROJECT_MEMORY.md`
+(antes era manual). `/ship` encadena `deploy-checker` +
+`vercel-deploy` si hace falta.
 
 ---
 
@@ -85,14 +88,37 @@ También copia `PROJECT_MEMORY.md` si no existe. Revisar y completar
 - [x] `agents/performance-auditor` — de `performance-lazy-mount.md`
 - [x] `templates/CLAUDE-mobile.md` — variante Expo/RN, de `stack-mobile.md`
 - [x] `templates/CLAUDE-automation.md` — variante Python/FastAPI, de `stack-automatizacion.md`
-- [x] `install.sh` — soporta variante `web|mobile|automation`
-- [ ] `commands/` — slash commands para flujos repetitivos
-- [ ] Evaluar agentes de VoltAgent/awesome-claude-code-subagents y
-      VoltAgent/awesome-agent-skills (incluye la colección de Garry
-      Tan tipo "equipo de ingeniería") para roles que no cubren los
-      docs propios — adaptados al estilo directo, no copiados tal cual
-- [ ] Evaluar Agent Teams / Dynamic Workflows para tareas verticales
-      grandes (no como modo default)
+- [x] `install.sh` — soporta variante `web|mobile|automation`, funciona
+      vía `npx` (resuelve symlinks), copia `commands/`
+- [x] `commands/audit.md` — corre `project-auditor` y actualiza
+      `PROJECT_MEMORY.md` solo, sin preguntar
+- [x] `commands/ship.md` — corre `deploy-checker` (+ `vercel-deploy` si
+      hace falta), resume en 3 listas, pregunta antes de auto-fixear
+- [x] `skills/security-review` — paginación agregada (de `stack-web.md`,
+      ahora completamente absorbido)
+
+**Evaluado y descartado** (no por falta de tiempo — son "no" deliberados):
+
+- **gstack / VoltAgent** (colección "equipo de ingeniería" de Garry
+  Tan): lo que más vale (`/review`, `/qa`) ya está cubierto por
+  `project-auditor` + `deploy-checker` (a medida de este stack) y por
+  `Skill(verify)` (built-in de Claude Code, gratis). Choque de voz/estilo
+  con el resto del repo. El scoping pre-build (`/office-hours`,
+  `/plan-eng-review`) ya pasa en el chat de Claude antes de Cursor —
+  no es un hueco.
+- **Agent Teams / Dynamic Workflows / Conductor** (paralelismo): no
+  matchea el flujo de confirmación paso a paso. Revisar si ChimichurrIA
+  escala a un punto donde haga falta correr cosas desatendidas.
+- **nachiDesignSkill** (paletas/tipografía como doc separado):
+  redundante — cuando hizo falta un componente visual nuevo (Aurora en
+  sladstudio), lo que funcionó fue el registro `@react-bits` (componente
+  real e instalable), no una referencia en markdown.
+
+**Pendiente, sin urgencia:**
+
+- `commands/scaffold.md` — árbol de decisión de `flujo-inicio-proyecto.md`
+  (qué tipo de proyecto → qué stack), para el paso de crear el repo
+  (anterior a `install.sh`)
 
 ---
 

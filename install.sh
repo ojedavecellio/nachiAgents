@@ -42,10 +42,18 @@ if [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
-mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills"
+mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands"
 
 cp "$SRC"/agents/*.md "$TARGET/.claude/agents/"
 cp -r "$SRC"/skills/* "$TARGET/.claude/skills/"
+
+# commands/README.md es documentación de nachiAgents, no un slash
+# command — todo lo demás en commands/*.md sí se copia.
+for f in "$SRC"/commands/*.md; do
+  base="$(basename "$f")"
+  [ "$base" = "README.md" ] && continue
+  cp "$f" "$TARGET/.claude/commands/"
+done
 
 case "$VARIANT" in
   web)

@@ -80,6 +80,20 @@ Nunca `SELECT *` en queries al cliente — siempre columnas explícitas,
 y filtrar la respuesta con zod antes de devolverla (así si mañana
 alguien agrega una columna sensible, no viaja sola al browser).
 
+Ningún endpoint que devuelve listas sin paginar — `PAGE_SIZE = 20`
+como default. `count: 'exact'` para que el cliente calcule el total
+de páginas:
+
+```typescript
+const PAGE_SIZE = 20
+
+const { data, count } = await supabase
+  .from('tabla')
+  .select('col1, col2, col3', { count: 'exact' })
+  .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
+  .order('created_at', { ascending: false })
+```
+
 Nunca columna `password` en tablas propias — solo Supabase Auth.
 
 Sin concatenación de strings para SQL crudo — siempre parámetros. El
