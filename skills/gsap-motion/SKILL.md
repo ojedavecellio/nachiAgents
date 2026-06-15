@@ -227,3 +227,7 @@ Para parallax de capas, pin + secuencias de transformación,
 draw-on-scroll (SVG/clip-path), texto que se ilumina con scroll,
 scroll horizontal y zoom estilo Apple/Linear: ver
 `references/scroll-parallax.md`.
+
+Si el hero usa Three.js (3D, partículas, shaders) y el scroll necesita
+controlar la cámara o la escena: ver el skill `three-js`, sección
+"Scroll de GSAP controlando la escena 3D".
