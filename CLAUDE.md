@@ -89,6 +89,11 @@ terminada, fix con causa no obvia, decisión de arquitectura),
 actualizarlo: mover de "Pendiente" a "Estado actual", anotar
 decisiones y gotchas nuevos. No hace falta para cambios chicos.
 
+Si `PROJECT_MEMORY.md` todavía tiene el template vacío (primera vez en
+este proyecto), correr `project-auditor` y completar "Estado actual" y
+"Decisiones de este proyecto" con el resultado antes de seguir — no
+dejarlo vacío más de una sesión.
+
 ## Flujos de trabajo
 
 **Proyecto existente sin contexto reciente en esta sesión** → usar el
@@ -96,6 +101,16 @@ subagente `project-auditor` antes de proponer cambios, features o
 arquitectura. No asumir stack ni estructura.
 
 **Antes de deployar a producción** → usar el subagente `deploy-checker`.
+
+**Conectando o configurando Supabase** (schema, RLS, storage, errores
+de conexión) → usar el subagente `supabase-setup`.
+
+**Deploy a Vercel, configurar variables de entorno, o build que falla
+en Vercel** → usar el subagente `vercel-deploy`.
+
+**Página lenta, Lighthouse con Speed Index alto, o antes/después de
+agregar Three.js, canvas o motion pesado** → usar el subagente
+`performance-auditor`.
 
 **Lovable / v0** → si el output es TanStack Start, migrar a Next.js
 antes de iterar. Lovable pone `robots: { index: false }` por defecto —
