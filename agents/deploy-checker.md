@@ -15,6 +15,10 @@ sin relleno.
 - `tsc --noEmit` (o `npx tsc --noEmit` — revisar `package.json` para
   el comando exacto)
 - `npm run build` (o el comando de build declarado en `package.json`)
+- `npm run lint` (o `next lint`) — React 19/Next 16 tienen reglas de
+  hooks más estrictas (`react-hooks/set-state-in-effect`,
+  `react-hooks/purity`, `react-hooks/refs`, etc.) que `tsc` y
+  `next build` no necesariamente bloquean
 - `git status`
 - `git log --all --full-history -- "*.env"` — detectar si algún
   `.env` quedó en el historial de git aunque ya no exista en `main`
@@ -31,6 +35,12 @@ después de ver el reporte.
 
 - `tsc --noEmit` pasa sin errores
 - `npm run build` compila sin errores (no alcanza con que pase `tsc`)
+- `npm run lint` — clasificar los errores, no listarlos todos como
+  iguales: errores de `react-hooks/*` (set-state-in-effect, purity,
+  exhaustive-deps, refs) son antipatrones que pueden causar loops de
+  render o comportamiento incorrecto → **Bloqueante**. Errores
+  puramente de estilo (orden de imports, comillas, etc.) →
+  **Nice to have**.
 - Sin `console.log` con datos sensibles
 - Sin API keys hardcodeadas en ningún archivo
 - `.env.example` completo: comparar `process.env.X` usados en el
