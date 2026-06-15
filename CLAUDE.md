@@ -106,6 +106,13 @@ dejarlo vacío más de una sesión.
 
 ## Flujos de trabajo
 
+**Editar archivos / implementar cambios** → usar la skill
+`cursor-delegate`: armar el prompt para Cursor CLI y ejecutarlo con
+`agent -p`. Claude Code lee, decide y verifica — Cursor edita. Esto
+conserva tokens de Claude Code para la parte de razonamiento, no para
+generar diffs. Solo editar directo si el usuario lo pide explícitamente
+o si `agent` no está disponible.
+
 **Proyecto existente sin contexto reciente en esta sesión** → usar el
 subagente `project-auditor` antes de proponer cambios, features o
 arquitectura. No asumir stack ni estructura.
