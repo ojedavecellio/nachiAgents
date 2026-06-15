@@ -35,6 +35,16 @@ mezclar los tres sin razón — uno principal, el otro solo donde el
 primero no alcanza. Ver skill `gsap-motion` para setup y patrones
 completos.
 
+## Diseño visual
+
+Para proyectos donde el aspecto visual importa (landings, portfolios,
+cualquier UI que tiene que parecer hecha por diseñador) — skill
+`hallmark` (criterio anti-AI-slop de Together AI: 22 temas, tipografía,
+color, layout, 65 slop gates antes de responder). Complementa a
+`gsap-motion`/`three-js`: Hallmark decide el look, los otros cómo se
+mueve. Si el proyecto ya tiene un design system cerrado, especificarlo
+explícitamente para que el modelo no lo override.
+
 ## IA / LLM
 
 Claude (`claude-sonnet-4-6` como referencia actual — verificar si cambió)

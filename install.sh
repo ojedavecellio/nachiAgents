@@ -55,6 +55,23 @@ for f in "$SRC"/commands/*.md; do
   cp "$f" "$TARGET/.claude/commands/"
 done
 
+# Hallmark (anti-AI-slop, ~106 archivos) — se clona el repo y se copia
+# solo la carpeta del skill (skills/hallmark/), mismo patrón que los
+# nuestros. No usamos "npx skills add": es interactivo (pide elegir
+# agentes con un menú) y se cuelga en un script no interactivo.
+# No fatal si git/red falla: el resto de nachiAgents queda instalado igual.
+if [ ! -d "$TARGET/.claude/skills/hallmark" ]; then
+  TMP_HALLMARK="$(mktemp -d)"
+  if git clone --depth 1 -q https://github.com/nutlope/hallmark.git "$TMP_HALLMARK" 2>/dev/null \
+     && [ -d "$TMP_HALLMARK/skills/hallmark" ]; then
+    cp -r "$TMP_HALLMARK/skills/hallmark" "$TARGET/.claude/skills/hallmark"
+    echo "Hallmark instalado en .claude/skills/hallmark/"
+  else
+    echo "No se pudo instalar Hallmark (github.com/nutlope/hallmark) — opcional, copiar 'skills/hallmark/' del repo a mano si hace falta."
+  fi
+  rm -rf "$TMP_HALLMARK"
+fi
+
 case "$VARIANT" in
   web)
     CLAUDE_SRC="$SRC/CLAUDE.md"
