@@ -1,0 +1,9 @@
+{
+  "name": "nachi-agents",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Agentes, skills, CLAUDE.md y memoria de proyecto para Claude Code — Nacho / ChimichurrIA",
+  "bin": {
+    "nachi-agents": "./install.sh"
+  }
+}

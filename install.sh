@@ -2,13 +2,30 @@
 # Instala agents/ y skills/ de nachiAgents en .claude/ de un proyecto
 # destino, y copia el CLAUDE.md correspondiente al tipo de proyecto.
 #
-# Uso: ./install.sh /ruta/al/proyecto [web|mobile|automation]
-#   (default: web)
+# Uso (parado en la carpeta del proyecto destino):
+#   nachi-agents                # variante web, instala acá (.)
+#   nachi-agents mobile         # variante mobile, instala acá (.)
+#   nachi-agents automation     # variante automation, instala acá (.)
+#
+# Uso legacy (apuntando a otra carpeta):
+#   nachi-agents /ruta/al/proyecto [web|mobile|automation]
 
 set -e
 
-TARGET="${1:?Uso: ./install.sh /ruta/al/proyecto [web|mobile|automation]}"
-VARIANT="${2:-web}"
+ARG1="${1:-}"
+ARG2="${2:-}"
+
+case "$ARG1" in
+  web|mobile|automation|"")
+    TARGET="."
+    VARIANT="${ARG1:-web}"
+    ;;
+  *)
+    TARGET="$ARG1"
+    VARIANT="${ARG2:-web}"
+    ;;
+esac
+
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ ! -d "$TARGET" ]; then
