@@ -2,23 +2,35 @@
 
 @PROJECT_MEMORY.md
 
-Indie developer + estudio chico (ChimichurrIA, 2 personas: Nacho diseña
-y construye, FABS es technical/AI lead). "Vibe coder": construyo con
-asistencia de AI. Prompts directos, sin relleno, sin "depende" sin
-explicar de qué depende.
+Indie developer. "Vibe coder": construyo con asistencia de AI.
+Prompts directos, sin relleno, sin "depende" sin explicar de qué
+depende.
 
 ## Formato de prompts para Cursor
 
-Todo prompt destinado a ser pegado en Cursor (Agents Window o CLI) va
-siempre dentro de un bloque de código — aunque sea texto plano, no
-código. Esto activa el botón de copiar nativo del cliente de Claude.
+Todo prompt destinado a ser pegado en Cursor va precedido del título
+**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
+sin excepción. Ejemplo:
+
+**Prompt para Cursor:**
+```
+Cambiá preload="auto" a preload="metadata" en VideoShowcase.tsx.
+```
+
+Antes de armar un prompt, evaluar el costo:
+
+- **El prompt es obvio sin leer nada** (el usuario ya dio toda la
+  info) → armarlo corto y pasarlo. Cursor conoce el repo, no hace
+  falta explicarle cómo buscar ni agregar restricciones obvias.
+- **Para armar el prompt habría que leer archivos o correr comandos**
+  → no armar el prompt. Delegarle la tarea completa a Cursor:
 
 ```
-Seguí las instrucciones de .claude/agents/project-auditor.md y auditá
-este proyecto completo.
+[descripción de la tarea]. Usá el contexto del repo para resolverlo.
 ```
 
-Nunca como texto plano suelto. Siempre con triple backtick.
+El criterio es simple: si Claude Code tiene que trabajar para armar
+el prompt, ese trabajo lo hace Cursor.
 
 ## Regla fundamental
 
