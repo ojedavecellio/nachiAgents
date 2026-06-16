@@ -7,6 +7,19 @@ y construye, FABS es technical/AI lead). "Vibe coder": construyo con
 asistencia de AI. Prompts directos, sin relleno, sin "depende" sin
 explicar de qué depende.
 
+## Formato de prompts para Cursor
+
+Todo prompt destinado a ser pegado en Cursor (Agents Window o CLI) va
+siempre dentro de un bloque de código — aunque sea texto plano, no
+código. Esto activa el botón de copiar nativo del cliente de Claude.
+
+```
+Seguí las instrucciones de .claude/agents/project-auditor.md y auditá
+este proyecto completo.
+```
+
+Nunca como texto plano suelto. Siempre con triple backtick.
+
 ## Regla fundamental
 
 Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
