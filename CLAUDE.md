@@ -7,6 +7,24 @@ y construye, FABS es technical/AI lead). "Vibe coder": construyo con
 asistencia de AI. Prompts directos, sin relleno, sin "depende" sin
 explicar de qué depende.
 
+## Regla fundamental
+
+Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
+sea necesario para entender el contexto, pero **no corre bash, no
+ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
+explícitamente.
+
+El rol de Claude Code es: leer, pensar, armar prompts para Cursor, y
+confirmar antes de hacer cualquier cosa que gaste tool calls.
+
+Antes de arrancar cualquier tarea, avisar:
+> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
+> querés el prompt para Cursor?"
+
+Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos"
+o "corré esto vos". En cualquier otro caso, el output es un prompt
+para Cursor — no una ejecución.
+
 ## Lenguaje y tipado
 
 TypeScript strict en todo, sin excepciones (`"strict": true`). Sin `any`
@@ -99,35 +117,33 @@ terminada, fix con causa no obvia, decisión de arquitectura),
 actualizarlo: mover de "Pendiente" a "Estado actual", anotar
 decisiones y gotchas nuevos. No hace falta para cambios chicos.
 
-Si `PROJECT_MEMORY.md` todavía tiene el template vacío (primera vez en
-este proyecto), correr `project-auditor` y completar "Estado actual" y
-"Decisiones de este proyecto" con el resultado antes de seguir — no
-dejarlo vacío más de una sesión.
-
 ## Flujos de trabajo
 
-**Editar archivos / implementar cambios** → usar la skill
-`cursor-delegate`: armar el prompt para Cursor CLI y ejecutarlo con
-`agent -p`. Claude Code lee, decide y verifica — Cursor edita. Esto
-conserva tokens de Claude Code para la parte de razonamiento, no para
-generar diffs. Solo editar directo si el usuario lo pide explícitamente
-o si `agent` no está disponible.
+Todos los flujos arrancan igual: Claude Code entiende el contexto y
+arma el prompt. Cursor ejecuta. Claude Code verifica.
 
-**Proyecto existente sin contexto reciente en esta sesión** → usar el
-subagente `project-auditor` antes de proponer cambios, features o
-arquitectura. No asumir stack ni estructura.
+El prompt para cada flujo es siempre el mismo esquema:
+> "Seguí las instrucciones de `.claude/agents/[nombre].md` y [tarea
+> concreta]."
 
-**Antes de deployar a producción** → usar el subagente `deploy-checker`.
+**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
+instrucciones de `.claude/agents/project-auditor.md` y auditá este
+proyecto."*
 
-**Conectando o configurando Supabase** (schema, RLS, storage, errores
-de conexión) → usar el subagente `supabase-setup`.
+**Antes de deployar** → prompt para Cursor: *"Seguí las instrucciones
+de `.claude/agents/deploy-checker.md`."*
 
-**Deploy a Vercel, configurar variables de entorno, o build que falla
-en Vercel** → usar el subagente `vercel-deploy`.
+**Conectar Supabase** → prompt para Cursor: *"Seguí las instrucciones
+de `.claude/agents/supabase-setup.md`."*
 
-**Página lenta, Lighthouse con Speed Index alto, o antes/después de
-agregar Three.js, canvas o motion pesado** → usar el subagente
-`performance-auditor`.
+**Build que falla en Vercel / env vars** → prompt para Cursor:
+*"Seguí las instrucciones de `.claude/agents/vercel-deploy.md`."*
+
+**Performance / Lighthouse** → prompt para Cursor: *"Seguí las
+instrucciones de `.claude/agents/performance-auditor.md`."*
+
+**Editar archivos** → armar prompt quirúrgico para Cursor siguiendo
+la skill `cursor-delegate`.
 
 **Lovable / v0** → si el output es TanStack Start, migrar a Next.js
 antes de iterar. Lovable pone `robots: { index: false }` por defecto —
