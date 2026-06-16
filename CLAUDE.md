@@ -167,8 +167,7 @@ de `.claude/agents/supabase-setup.md`."*
 **Performance / Lighthouse** → prompt para Cursor: *"Seguí las
 instrucciones de `.claude/agents/performance-auditor.md`."*
 
-**Editar archivos** → armar prompt quirúrgico para Cursor siguiendo
-la skill `cursor-delegate`.
+**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho para pegar en Agents Window.
 
 **Lovable / v0** → si el output es TanStack Start, migrar a Next.js
 antes de iterar. Lovable pone `robots: { index: false }` por defecto —
