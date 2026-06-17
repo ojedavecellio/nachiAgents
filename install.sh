@@ -45,7 +45,19 @@ fi
 mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands"
 
 cp "$SRC"/agents/*.md "$TARGET/.claude/agents/"
-cp -r "$SRC"/skills/* "$TARGET/.claude/skills/"
+
+# skills/ — todos al proyecto excepto nextjs-audit (va global)
+for d in "$SRC"/skills/*/; do
+  name="$(basename "$d")"
+  [ "$name" = "nextjs-audit" ] && continue
+  cp -r "$d" "$TARGET/.claude/skills/$name"
+done
+
+# nextjs-audit va en ~/.claude/skills/ (global) — disponible en todos
+# los proyectos sin estar versionado en cada uno.
+mkdir -p ~/.claude/skills/nextjs-audit
+cp "$SRC/skills/nextjs-audit/SKILL.md" ~/.claude/skills/nextjs-audit/SKILL.md
+echo "nextjs-audit instalado globalmente en ~/.claude/skills/"
 
 # commands/README.md es documentación de nachiAgents, no un slash
 # command — todo lo demás en commands/*.md sí se copia.
