@@ -137,10 +137,15 @@ dependencias para cosas que la plataforma ya resuelve.
 ## Memoria del proyecto
 
 `PROJECT_MEMORY.md` (importado arriba) es el estado vivo y específico
-de este proyecto. Después de un cambio significativo (feature
-terminada, fix con causa no obvia, decisión de arquitectura),
-actualizarlo: mover de "Pendiente" a "Estado actual", anotar
-decisiones y gotchas nuevos. No hace falta para cambios chicos.
+de este proyecto. Al arrancar cada sesión, leerlo primero.
+
+Si está vacío o solo tiene el template sin llenar — antes de hacer
+cualquier otra cosa, preguntarle a Nacho:
+> "PROJECT_MEMORY.md está vacío. Contame el problema que resuelve
+> esta app y qué está construido hasta ahora, para tener contexto
+> antes de arrancar."
+
+Después de un cambio significativo, actualizarlo.
 
 ## Flujos de trabajo
 
