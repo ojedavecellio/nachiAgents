@@ -28,10 +28,13 @@ if [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
-mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands"
+mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands" "$TARGET/.cursor/rules"
 
 cp "$SRC"/agents/*.md "$TARGET/.claude/agents/"
 cp -r "$SRC"/skills/* "$TARGET/.claude/skills/"
+
+# Cursor rules — mapa de contexto para Cursor Agent
+cp "$SRC/templates/cursor-rules/nachiagents.mdc" "$TARGET/.cursor/rules/nachiagents.mdc"
 
 for f in "$SRC"/commands/*.md; do
   base="$(basename "$f")"

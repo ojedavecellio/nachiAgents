@@ -1,0 +1,37 @@
+---
+alwaysApply: true
+---
+
+# nachiAgents — Mapa de contexto
+
+## Memoria del proyecto
+`PROJECT_MEMORY.md` en la raíz — leerlo cuando la tarea involucre
+dominio del negocio, decisiones de arquitectura, o contexto del
+problema. Si está vacío o es el template sin llenar, preguntarle al
+usuario el contexto antes de arrancar.
+
+## Agentes disponibles en `.claude/agents/`
+Leer y seguir el archivo correspondiente cuando la tarea encaje:
+
+- `project-auditor.md` → auditoría general del proyecto
+- `deploy-checker.md` → checklist antes de deployar
+- `supabase-setup.md` → configurar schema, RLS, storage
+- `vercel-deploy.md` → variables de entorno, errores de build
+- `performance-auditor.md` → Lighthouse, lazy-mount, Speed Index
+
+## Skills disponibles en `.claude/skills/`
+Leer el SKILL.md correspondiente cuando la tarea lo requiera:
+
+- `gsap-motion/` → animaciones GSAP, ScrollTrigger, parallax
+- `three-js/` → Three.js / R3F, shaders, partículas
+- `glass-patterns/` → glassmorphism CSS y Liquid Glass
+- `security-review/` → RLS, zod, paginación, headers
+- `git-commits/` → formato de commits
+- `hallmark/` → criterio estético, anti-AI-slop
+- `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
+
+## Commands en `.claude/commands/`
+Invocar cuando el usuario los pida explícitamente:
+
+- `/audit` → corre project-auditor y actualiza PROJECT_MEMORY.md
+- `/ship` → corre deploy-checker antes de deployar
