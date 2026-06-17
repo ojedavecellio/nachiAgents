@@ -13,11 +13,11 @@ usuario el contexto antes de arrancar.
 ## Agentes disponibles en `.claude/agents/`
 Leer y seguir el archivo correspondiente cuando la tarea encaje:
 
-- `project-auditor.md` → auditoría general del proyecto
-- `deploy-checker.md` → checklist antes de deployar
-- `supabase-setup.md` → configurar schema, RLS, storage
-- `vercel-deploy.md` → variables de entorno, errores de build
-- `performance-auditor.md` → Lighthouse, lazy-mount, Speed Index
+- `project-auditor.md` → auditoría general: "revisá el proyecto", "qué tiene", "state of the app"
+- `deploy-checker.md` → antes de deployar: "quiero deployar", "mergear a main", "ship"
+- `supabase-setup.md` → schema, RLS, migraciones, "relation does not exist"
+- `vercel-deploy.md` → variables de entorno, errores de build en Vercel
+- `performance-auditor.md` → "lento", "Lighthouse", "Speed Index", antes/después de agregar WebGL o canvas
 
 ## Skills disponibles en `.claude/skills/`
 Leer el SKILL.md correspondiente cuando la tarea lo requiera:
@@ -27,11 +27,11 @@ Leer el SKILL.md correspondiente cuando la tarea lo requiera:
 - `glass-patterns/` → glassmorphism CSS y Liquid Glass
 - `security-review/` → RLS, zod, paginación, headers
 - `git-commits/` → formato de commits
-- `hallmark/` → criterio estético, anti-AI-slop
+- `hallmark/` → rediseño visual, criterio estético, anti-AI-slop
 - `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
 
 ## Commands en `.claude/commands/`
-Invocar cuando el usuario los pida explícitamente:
+Cuando el usuario los pida, leer el archivo completo y ejecutar:
 
-- `/audit` → corre project-auditor y actualiza PROJECT_MEMORY.md
-- `/ship` → corre deploy-checker antes de deployar
+- `/audit` → leer `.claude/commands/audit.md` y ejecutar
+- `/ship` → leer `.claude/commands/ship.md` y ejecutar
