@@ -78,4 +78,15 @@ else
   echo "PROJECT_MEMORY.md ya existe — no se sobreescribió."
 fi
 
+# Agregar .claude/ y .cursor/ al .gitignore si no están ya
+GITIGNORE="$TARGET/.gitignore"
+for entry in ".claude/" ".cursor/"; do
+  if [ -f "$GITIGNORE" ]; then
+    grep -qF "$entry" "$GITIGNORE" || echo "$entry" >> "$GITIGNORE"
+  else
+    echo "$entry" >> "$GITIGNORE"
+  fi
+done
+echo ".claude/ y .cursor/ agregados al .gitignore"
+
 echo "Listo. Agentes y skills instalados en $TARGET/.claude/"
