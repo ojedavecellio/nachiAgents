@@ -6,6 +6,14 @@ Indie developer. "Vibe coder": construyo con asistencia de AI.
 Prompts directos, sin relleno, sin "depende" sin explicar de qué
 depende.
 
+## Antes de arrancar cualquier tarea
+
+Anunciar qué recursos se van a usar:
+> "Para esto voy a usar: `[agente/skill]`"
+
+Si la tarea requiere varios recursos, listarlos todos. Si no aplica
+ninguno, no anunciar nada.
+
 ## Formato de prompts para Cursor
 
 Todo prompt destinado a ser pegado en Cursor va precedido del título
@@ -87,6 +95,11 @@ color, layout, 65 slop gates antes de responder). Complementa a
 `gsap-motion`/`three-js`: Hallmark decide el look, los otros cómo se
 mueve. Si el proyecto ya tiene un design system cerrado, especificarlo
 explícitamente para que el modelo no lo override.
+
+Para componentes que deben seguir el design system de Vercel — skill
+`vercel-ui` (tokens Geist: paleta completa, tipografía, spacing,
+radios, componentes). Usarla cuando se trabaje en proyectos deployados
+en Vercel o cuando se pida explícitamente estilo Geist.
 
 ## IA / LLM
 

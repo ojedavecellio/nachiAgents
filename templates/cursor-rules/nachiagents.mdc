@@ -1,8 +1,15 @@
 ---
 alwaysApply: true
 ---
-
 # nachiAgents — Mapa de contexto
+
+## Antes de arrancar cualquier tarea
+
+Anunciar qué recursos se van a usar antes de ejecutar:
+> "Para esto voy a usar: `[agente/skill]`"
+
+Si la tarea requiere varios recursos, listarlos todos. Si no aplica
+ninguno, no forzar.
 
 ## Memoria del proyecto
 `PROJECT_MEMORY.md` en la raíz — leerlo cuando la tarea involucre
@@ -12,7 +19,6 @@ usuario el contexto antes de arrancar.
 
 ## Agentes disponibles en `.claude/agents/`
 Leer y seguir el archivo correspondiente cuando la tarea encaje:
-
 - `project-auditor.md` → auditoría general: "revisá el proyecto", "qué tiene", "state of the app"
 - `deploy-checker.md` → antes de deployar: "quiero deployar", "mergear a main", "ship"
 - `supabase-setup.md` → schema, RLS, migraciones, "relation does not exist"
@@ -21,7 +27,6 @@ Leer y seguir el archivo correspondiente cuando la tarea encaje:
 
 ## Skills disponibles en `.claude/skills/`
 Leer el SKILL.md correspondiente cuando la tarea lo requiera:
-
 - `gsap-motion/` → animaciones GSAP, ScrollTrigger, parallax
 - `three-js/` → Three.js / R3F, shaders, partículas
 - `glass-patterns/` → glassmorphism CSS y Liquid Glass
@@ -29,9 +34,9 @@ Leer el SKILL.md correspondiente cuando la tarea lo requiera:
 - `git-commits/` → formato de commits
 - `hallmark/` → rediseño visual, criterio estético, anti-AI-slop
 - `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
+- `vercel-ui/` → componentes con design system Geist: tokens de color, tipografía, spacing, radios, componentes — usar cuando la tarea sea de UI/diseño visual
 
 ## Commands en `.claude/commands/`
 Cuando el usuario los pida, leer el archivo completo y ejecutar:
-
 - `/audit` → leer `.claude/commands/audit.md` y ejecutar
 - `/ship` → leer `.claude/commands/ship.md` y ejecutar
