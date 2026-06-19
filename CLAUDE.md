@@ -1,4 +1,4 @@
-# Contexto base — Nacho / ChimichurrIA
+# Contexto base — Nacho
 
 @PROJECT_MEMORY.md
 

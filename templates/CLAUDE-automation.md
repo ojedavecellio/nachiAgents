@@ -1,8 +1,8 @@
-# Contexto base (automatización) — Nacho / ChimichurrIA
+# Contexto base (automatización) — Nacho
 
 @PROJECT_MEMORY.md
 
-Indie developer + estudio chico (ChimichurrIA, 2 personas). Vibe coder:
+Indie developer. Vibe coder:
 construyo con asistencia de AI. Prompts directos, sin relleno.
 
 ## Cuándo este stack
