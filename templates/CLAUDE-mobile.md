@@ -93,17 +93,54 @@ TypeScript strict, sin `any` implícito. Un archivo = una
 responsabilidad. Sin comentarios obvios. Testing mínimo: lógica de
 negocio core si la hay, no UI.
 
+## Formato de prompts para Cursor
+
+Todo prompt destinado a ser pegado en Cursor va precedido del título
+**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
+sin excepción.
+
+Antes de armar un prompt, evaluar el costo:
+
+- **El prompt es obvio sin leer nada** → armarlo corto y pasarlo.
+- **Para armar el prompt habría que leer archivos o correr comandos**
+  → delegarle la tarea completa a Cursor directamente.
+
+## Regla fundamental
+
+Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
+sea necesario para entender el contexto, pero **no corre bash, no
+ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
+explícitamente.
+
+Antes de arrancar cualquier tarea, avisar:
+> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
+> querés el prompt para Cursor?"
+
+Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos".
+
 ## Memoria del proyecto
 
 `PROJECT_MEMORY.md` (importado arriba) es el estado vivo de este
-proyecto — específico, no genérico. Actualizar después de cambios
-significativos (features terminadas, decisiones de arquitectura,
-migración de SQLite aplicada).
+proyecto. Al arrancar cada sesión, leerlo primero.
+
+Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:
+> "PROJECT_MEMORY.md está vacío. Contame el problema que resuelve
+> esta app y qué está construido hasta ahora."
+
+Después de un cambio significativo, actualizarlo.
 
 ## Flujos de trabajo
 
-Proyecto existente sin contexto reciente en esta sesión → usar
-`project-auditor` antes de proponer cambios. Antes de cualquier build
-de producción con `eas build` → confirmar que las API keys están en
-EAS Secrets, nunca hardcodeadas ni en un `.env` que termine en el
-bundle (skill `security-review`, sección Expo/React Native).
+Todos los flujos arrancan igual: Claude Code entiende el contexto y
+arma el prompt. Cursor ejecuta. Claude Code verifica.
+
+**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
+instrucciones de `.claude/agents/project-auditor.md` y auditá este
+proyecto."*
+
+**Antes de un build de producción con `eas build`** → prompt para
+Cursor: *"Seguí las instrucciones de `.claude/agents/deploy-checker.md`."*
+Confirmar que las API keys están en EAS Secrets, nunca hardcodeadas.
+
+**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho
+para pegar en Agents Window.

@@ -115,17 +115,55 @@ comentarios obvios.
 OAuth con Google en callbacks separados (login/callback en distintas
 instancias del Flow) puede requerir deshabilitar PKCE explícitamente.
 
+## Formato de prompts para Cursor
+
+Todo prompt destinado a ser pegado en Cursor va precedido del título
+**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
+sin excepción.
+
+Antes de armar un prompt, evaluar el costo:
+
+- **El prompt es obvio sin leer nada** → armarlo corto y pasarlo.
+- **Para armar el prompt habría que leer archivos o correr comandos**
+  → delegarle la tarea completa a Cursor directamente.
+
+## Regla fundamental
+
+Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
+sea necesario para entender el contexto, pero **no corre bash, no
+ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
+explícitamente.
+
+Antes de arrancar cualquier tarea, avisar:
+> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
+> querés el prompt para Cursor?"
+
+Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos".
+
 ## Memoria del proyecto
 
 `PROJECT_MEMORY.md` (importado arriba) es el estado vivo de este
-proyecto. Prestar especial atención a documentar el schema de
-`actions.jsonl` y qué adapters están activos (memory vs real) por
-integración — es lo más fácil de perder de vista entre sesiones, y el
-README puede decir "usa MCP" mientras el código inyecta OAuth (estado
-válido de transición, pero hay que documentarlo acá).
+proyecto. Al arrancar cada sesión, leerlo primero. Prestar especial
+atención al schema de `actions.jsonl` y qué adapters están activos
+(memory vs real) — es lo más fácil de perder de vista entre sesiones.
+
+Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:
+> "PROJECT_MEMORY.md está vacío. Contame el problema que resuelve
+> esta automatización y qué está construido hasta ahora."
+
+Después de un cambio significativo, actualizarlo.
 
 ## Flujos de trabajo
 
-Proyecto existente sin contexto reciente en esta sesión → usar
-`project-auditor` antes de proponer cambios. Antes de hacer público o
-deployar → skill `security-review`, sección Python/FastAPI.
+Todos los flujos arrancan igual: Claude Code entiende el contexto y
+arma el prompt. Cursor ejecuta. Claude Code verifica.
+
+**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
+instrucciones de `.claude/agents/project-auditor.md` y auditá este
+proyecto."*
+
+**Antes de hacer público o deployar** → prompt para Cursor: *"Seguí
+las instrucciones de `.claude/agents/deploy-checker.md`."*
+
+**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho
+para pegar en Agents Window.
