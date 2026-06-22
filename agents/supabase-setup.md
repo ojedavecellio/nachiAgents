@@ -31,7 +31,52 @@ carpeta de migraciones, creala. Cada migración nueva va después de la
 última existente — revisar con `ls supabase/migrations/` antes de
 numerar.
 
-**RLS** — toda tabla con datos de usuarios necesita RLS activado
+## Antes de generar policies RLS
+
+Si el proyecto tiene más de un tipo de usuario o rol, preguntar antes
+de generar cualquier policy:
+
+1. ¿Cuántos roles hay y cómo se llaman? (ej. `admin`, `encargado`, `viewer`)
+2. ¿Qué puede hacer cada rol en cada tabla? (leer todo / leer solo lo
+   suyo / escribir / nada)
+3. ¿Los usuarios pertenecen a una entidad compartida (organización,
+   planta, empresa) o son completamente independientes?
+
+Con esas respuestas, generar policies separadas por rol y por
+operación (SELECT/INSERT/UPDATE/DELETE) en vez de `for all`:
+
+```sql
+-- rol con acceso total
+create policy "admin full access"
+  on nombre_tabla for all to authenticated
+  using (auth.jwt() ->> 'role' = 'admin')
+  with check (auth.jwt() ->> 'role' = 'admin');
+
+-- rol con acceso solo a sus propios datos
+create policy "encargado own rows"
+  on nombre_tabla for select to authenticated
+  using (
+    auth.jwt() ->> 'role' = 'encargado'
+    and auth.uid() = user_id
+  );
+```
+
+Si hay multi-tenancy (usuarios de la misma organización comparten
+datos), el `user_id` no alcanza — necesitás un `org_id` o
+`planta_id` en cada tabla y la policy lo referencia:
+
+```sql
+create policy "same org access"
+  on nombre_tabla for select to authenticated
+  using (
+    org_id = (
+      select org_id from profiles
+      where id = auth.uid()
+    )
+  );
+```
+
+## RLS
 explícitamente, nunca es automático:
 
 ```sql
