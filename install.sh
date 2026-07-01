@@ -28,7 +28,16 @@ if [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
-mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands" "$TARGET/.cursor/rules"
+mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands" "$TARGET/.cursor/rules" "$TARGET/.cursor/skills"
+
+copy_skill() {
+  local src="$1"
+  local dest="$2"
+  if [ -d "$SRC/$src" ]; then
+    mkdir -p "$(dirname "$dest")"
+    cp -r "$SRC/$src" "$dest"
+  fi
+}
 
 cp "$SRC"/agents/*.md "$TARGET/.claude/agents/"
 cp -r "$SRC"/skills/* "$TARGET/.claude/skills/"
@@ -53,6 +62,16 @@ if [ ! -d "$TARGET/.claude/skills/hallmark" ]; then
   fi
   rm -rf "$TMP_HALLMARK"
 fi
+
+# Design skills
+copy_skill ".claude/skills/emil-design-eng" "$TARGET/.claude/skills/emil-design-eng"
+copy_skill ".cursor/skills/emil-design-eng" "$TARGET/.cursor/skills/emil-design-eng"
+copy_skill ".claude/skills/taste-skill" "$TARGET/.claude/skills/taste-skill"
+copy_skill ".cursor/skills/taste-skill" "$TARGET/.cursor/skills/taste-skill"
+
+echo ""
+echo "📐 Design skills installed: emil-design-eng, taste-skill"
+echo "   For impeccable (23 commands + CLI detector), run separately: npx impeccable install"
 
 case "$VARIANT" in
   web)        CLAUDE_SRC="$SRC/CLAUDE.md" ;;

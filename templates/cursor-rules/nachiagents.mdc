@@ -26,6 +26,11 @@ Leer el SKILL.md correspondiente cuando la tarea lo requiera:
 - `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
 - `vercel-ui/` → componentes con design system Geist: tokens de color, tipografía, spacing, radios, componentes — usar cuando la tarea sea de UI/diseño visual
 
+## Design Skills (for frontend/UI work)
+- `.claude/skills/emil-design-eng/SKILL.md` — animation decisions, UI micro-polish (Emil Kowalski)
+- `.claude/skills/taste-skill/SKILL.md` — anti-slop full frontend, dials, pre-flight check (taste-skill)
+- Impeccable: install separately via `npx impeccable install` — 23 commands (/polish, /audit, /critique, /bolder, /quieter, /animate...)
+
 ## Commands en `.claude/commands/`
 Cuando el usuario los pida, leer el archivo completo y ejecutar:
 - `/audit` → leer `.claude/commands/audit.md` y ejecutar

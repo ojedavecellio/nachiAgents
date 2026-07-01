@@ -101,6 +101,29 @@ Para componentes que deben seguir el design system de Vercel — skill
 radios, componentes). Usarla cuando se trabaje en proyectos deployados
 en Vercel o cuando se pida explícitamente estilo Geist.
 
+## Design Skills
+
+Tres skills complementarias para frontend/UI — usalas juntas, no son
+alternativas:
+
+- **`emil-design-eng`** — decisiones de animación, micro-polish de
+  componentes e interacciones. Cuando construís o revisás código de
+  motion/interaction.
+- **`taste-skill`** — anti-slop full frontend: layout, tipografía,
+  motion, spacing, pre-flight check. Landings, portfolios, redesigns
+  (no dashboards ni tablas de datos). Dials: DESIGN_VARIANCE /
+  MOTION_INTENSITY / VISUAL_DENSITY (1–10).
+- **Impeccable** — 23 comandos slash (`/polish`, `/audit`, `/critique`,
+  `/bolder`, `/quieter`, `/animate`...) + detector CLI. Para passes de
+  polish y audit. No se copia estático — se instala aparte:
+
+```bash
+npx impeccable install
+```
+
+Capas: impeccable → vocabulario y anti-patterns; taste-skill → brief,
+dials y layout; emil-design-eng → framework de animación y micro-detalle.
+
 ## IA / LLM
 
 Claude (`claude-sonnet-4-6` como referencia actual — verificar si cambió)
