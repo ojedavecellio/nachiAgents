@@ -14,6 +14,8 @@ Leer y seguir el archivo correspondiente cuando la tarea encaje:
 - `supabase-setup.md` → schema, RLS, migraciones, "relation does not exist"
 - `vercel-deploy.md` → variables de entorno, errores de build en Vercel
 - `performance-auditor.md` → "lento", "Lighthouse", "Speed Index", antes/después de agregar WebGL o canvas
+- `product-discovery.md` → idea cruda de producto/feature sin validar, "tengo una idea", "no sé si vale la pena"
+- `feature-spec.md` → convertir una idea validada en spec construible, "armame el spec de esto"
 
 ## Skills disponibles en `.claude/skills/`
 Leer el SKILL.md correspondiente cuando la tarea lo requiera:
@@ -25,6 +27,8 @@ Leer el SKILL.md correspondiente cuando la tarea lo requiera:
 - `hallmark/` → rediseño visual, criterio estético, anti-AI-slop
 - `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
 - `vercel-ui/` → componentes con design system Geist: tokens de color, tipografía, spacing, radios, componentes — usar cuando la tarea sea de UI/diseño visual
+- `lean-experiments/` → diseñar el experimento más barato para validar una hipótesis de producto antes de construir
+- `rapid-prototype/` → prototipo HTML desechable de una pantalla/flujo antes de construirlo en el stack real
 
 ## Design Skills (for frontend/UI work)
 - `.claude/skills/emil-design-eng/SKILL.md` — animation decisions, UI micro-polish (Emil Kowalski)

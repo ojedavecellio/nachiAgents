@@ -227,6 +227,20 @@ de `.claude/agents/supabase-setup.md`."*
 **Performance / Lighthouse** → prompt para Cursor: *"Seguí las
 instrucciones de `.claude/agents/performance-auditor.md`."*
 
+**Idea cruda de producto/feature** → correr `.claude/agents/product-discovery.md`
+directo (no es prompt para Cursor — es research/razonamiento, el
+output queda en esta sesión). Si señala un riesgo sin validar, usar
+la skill `lean-experiments` antes de seguir.
+
+**Convertir una idea validada en algo construible** → correr
+`.claude/agents/feature-spec.md` directo. El spec resultante se pega
+en `PROJECT_MEMORY.md` o se usa como contexto para el prompt de
+Cursor que arma la feature.
+
+**Validar un flujo de UX antes de construirlo posta** → skill
+`rapid-prototype` — genera un HTML desechable, no toca el proyecto
+real.
+
 **Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho para pegar en Agents Window.
 
 **Lovable / v0** → si el output es TanStack Start, migrar a Next.js

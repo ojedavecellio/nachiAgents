@@ -61,11 +61,15 @@ Subagents in `.claude/agents/`. Each is a focused Claude instance with its own s
 
 | Agent | When to use |
 |---|---|
-| `project-auditor.md` | General project audit, state of the app |
-| `deploy-checker.md` | Pre-deploy verification, before merging to main |
+| `project-auditor.md` | General project audit, state of the app *(model: haiku)* |
+| `deploy-checker.md` | Pre-deploy verification, before merging to main *(model: haiku)* |
 | `supabase-setup.md` | Schema, RLS, migrations |
 | `vercel-deploy.md` | Env vars, Vercel build errors |
 | `performance-auditor.md` | Lighthouse, Speed Index, WebGL/canvas performance |
+| `product-discovery.md` | Structure a raw idea into vision, persona, JTBD, falsifiable hypotheses *(model: opus)* |
+| `feature-spec.md` | Turn a validated idea into a lightweight PRD Cursor can build from |
+
+`project-auditor` and `deploy-checker` run read-only checklists against files — no deep reasoning needed, routed to haiku to cut cost. `product-discovery` benefits from opus for hypothesis framing.
 
 ---
 
@@ -83,6 +87,8 @@ Playbooks in `.claude/skills/`. Claude Code loads the relevant `SKILL.md` when t
 | `hallmark/` | Visual redesign, aesthetic review, anti-AI-slop |
 | `nextjs-audit/` | Next.js security and scalability audit |
 | `vercel-ui/` | Geist design system tokens: colors, typography, spacing, components |
+| `lean-experiments/` | Design the cheapest experiment that can falsify a product hypothesis |
+| `rapid-prototype/` | Disposable HTML prototype of a screen/flow before building it for real |
 
 ### Design skills
 
@@ -93,6 +99,10 @@ Three complementary skills for frontend/UI work — used together, not as altern
 | `emil-design-eng/` | Animation decisions, UI micro-polish, interaction craft |
 | `taste-skill/` | Anti-slop full frontend pass: layout, typography, motion, spacing, pre-flight check |
 | Impeccable | 23 slash commands (`/polish`, `/audit`, `/critique`, `/bolder`, `/quieter`, `/animate`...) — installed separately, not copied as a static file: `npx impeccable install` |
+
+### Product & prototyping
+
+For work that starts before any code — validating an idea, spec'ing a feature, testing a UX flow — the flow is: `product-discovery` (structure the idea, flag the biggest unvalidated risk) → skill `lean-experiments` (design the cheapest test for that risk) → `feature-spec` (once validated, turn it into a lightweight PRD) → optionally skill `rapid-prototype` (disposable HTML mockup to resolve UX uncertainty before writing the spec's user stories). All read-only / research — no code is written until a spec goes to Cursor.
 
 ---
 

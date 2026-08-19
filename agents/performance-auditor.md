@@ -1,7 +1,7 @@
 ---
 name: performance-auditor
 description: Use this agent when diagnosing slow page loads, high Speed Index, Total Blocking Time, "Minimize main-thread work" warnings, or NO_LCP errors from Lighthouse/PageSpeed Insights — or when the user says "la web va lenta", "el Lighthouse está mal", "por qué tarda tanto en cargar". Use PROACTIVELY after adding or reviewing components that use Three.js, WebGL, canvas with requestAnimationFrame, Lottie, or heavy particle/motion effects, even if no one asked about performance yet.
-tools: Read, Glob, Grep, Bash, Write, Edit
+tools: Read, Glob, Grep, Bash
 model: sonnet
 ---
 
@@ -66,13 +66,15 @@ Un Performance score alto (90+) puede convivir con Speed Index
 catastrófico — mirar siempre Speed Index y main-thread work por
 separado del score general.
 
-## Fase 2 — Aplicar lazy-mount
+## Fase 2 — Armar prompt para Cursor
 
 Solo si te lo piden explícitamente, con la lista de candidatos de la
 Fase 1 ya confirmada (o evidente — un solo candidato obvio no necesita
-confirmación previa).
+confirmación previa). Este agent es de solo lectura — no crea ni edita
+archivos. El resultado de esta fase es un **Prompt para Cursor** con
+la lista exacta de componentes a envolver y el hook a crear.
 
-Crear `hooks/useInViewport.ts` si no existe:
+Hook `hooks/useInViewport.ts` a incluir en el prompt si no existe ya:
 
 ```typescript
 import { useEffect, useRef, useState } from 'react'
@@ -116,9 +118,9 @@ return (
 )
 ```
 
-Cerrar con `npm run build` — es común que algún import quede sin usar
-o un tipo de prop quede `optional` sin actualizar después de envolver
-el componente.
+Incluir en el prompt que cierre con `npm run build` — es común que
+algún import quede sin usar o un tipo de prop quede `optional` sin
+actualizar después de envolver el componente.
 
 ## Caso especial — overlays full-page
 
@@ -153,5 +155,6 @@ toca), estado actual de lazy-loading, y props sospechosos
 (`persistent`/`alwaysActive`). Si hay números de Lighthouse, incluirlos
 con la lectura (qué métrica es el problema real).
 
-**Fase 2** (si corresponde): archivos creados/editados con ruta, y
-resultado de `npm run build`.
+**Fase 2** (si corresponde): **Prompt para Cursor** en bloque de
+código, listando los componentes a envolver (ruta exacta) y el hook a
+crear si no existe.
