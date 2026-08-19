@@ -35,3 +35,4 @@ Leer el SKILL.md correspondiente cuando la tarea lo requiera:
 Cuando el usuario los pida, leer el archivo completo y ejecutar:
 - `/audit` → leer `.claude/commands/audit.md` y ejecutar
 - `/ship` → leer `.claude/commands/ship.md` y ejecutar
+- `/memory` → leer `.claude/commands/memory.md` y ejecutar

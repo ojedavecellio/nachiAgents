@@ -163,6 +163,25 @@ el qué.
 Mínimo, no cero. Auth, pagos, lógica de negocio core, decisiones
 irreversibles: sí. UI y componentes visuales: no.
 
+## Recommended tools
+
+Herramientas externas para usar en momentos puntuales, no como parte
+del flujo default:
+
+- **`npx react-doctor@latest`** — anti-patterns en la capa de React
+  (re-renders, hooks mal usados, memoization faltante). Complementa a
+  `nextjs-audit`, que cubre el stack completo (seguridad, routing,
+  data fetching) pero no entra tan profundo en React puro. Correr
+  antes de un `/ship` si hubo cambios grandes de componentes.
+- **`/plugin install claude-code-setup@claude-plugins-official`** —
+  setup asistido de Claude Code en un proyecto nuevo (permisos, MCPs,
+  hooks). Usar al arrancar un repo desde cero, no en proyectos ya
+  configurados con este framework.
+- **`claude plugin install figma@claude-plugins-official`** — MCP de
+  Figma para traer specs de diseño (tokens, medidas, assets)
+  directamente al contexto. Usar cuando hay un diseño en Figma que
+  hay que implementar 1:1, en vez de describir el diseño a mano.
+
 ## Lo que se evita siempre
 
 Redux, ORMs como primera opción, librerías UI completas, API keys en el

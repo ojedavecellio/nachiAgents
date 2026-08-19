@@ -129,6 +129,18 @@ Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:
 
 Después de un cambio significativo, actualizarlo.
 
+## Recommended tools
+
+- **`npx react-doctor@latest`** — anti-patterns en la capa de React
+  (re-renders, hooks mal usados). Aplica igual en React Native. Correr
+  antes de un build de producción si hubo cambios grandes de
+  componentes.
+- **`/plugin install claude-code-setup@claude-plugins-official`** —
+  setup asistido de Claude Code en un proyecto Expo nuevo.
+- **`claude plugin install figma@claude-plugins-official`** — MCP de
+  Figma para traer specs de diseño directo al contexto cuando hay que
+  implementar una pantalla 1:1 desde un diseño.
+
 ## Flujos de trabajo
 
 Todos los flujos arrancan igual: Claude Code entiende el contexto y

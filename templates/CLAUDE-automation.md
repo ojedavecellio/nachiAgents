@@ -153,6 +153,15 @@ Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:
 
 Después de un cambio significativo, actualizarlo.
 
+## Recommended tools
+
+- **`/plugin install claude-code-setup@claude-plugins-official`** —
+  setup asistido de Claude Code en un proyecto nuevo (permisos, MCPs,
+  hooks). Usar al arrancar el repo, no en proyectos ya configurados.
+
+`react-doctor` y el MCP de `figma` no aplican a este stack (sin capa
+de React ni UI que implementar desde diseño).
+
 ## Flujos de trabajo
 
 Todos los flujos arrancan igual: Claude Code entiende el contexto y

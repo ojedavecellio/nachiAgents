@@ -8,6 +8,9 @@ Slash commands custom (`.claude/commands/`).
 - `/ship` — corre `deploy-checker` (y `vercel-deploy` si hay algo
   bloqueante de env vars/build), resume en las tres listas, y ofrece
   arreglar lo automatizable.
+- `/memory` — lee `PROJECT_MEMORY.md`, resume estado actual y
+  pendientes ordenados por impacto, y sugiere qué atacar primero. Si
+  el archivo está vacío, pide contexto en vez de inventarlo.
 
 Pendiente, sin urgencia:
 

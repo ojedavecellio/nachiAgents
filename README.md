@@ -30,7 +30,9 @@ nachiAgents/
 │       └── nachiagents.mdc       ← context map for Cursor Agent (alwaysApply: true)
 ├── agents/                       ← subagents with specific tasks and tools
 ├── skills/                       ← playbooks loaded on demand per task
-└── commands/                     ← slash commands (/audit, /ship)
+├── commands/                     ← slash commands (/audit, /ship, /memory)
+└── .claude/skills/ · .cursor/skills/
+                                  ← design skills (emil-design-eng, taste-skill)
 ```
 
 ---
@@ -82,6 +84,16 @@ Playbooks in `.claude/skills/`. Claude Code loads the relevant `SKILL.md` when t
 | `nextjs-audit/` | Next.js security and scalability audit |
 | `vercel-ui/` | Geist design system tokens: colors, typography, spacing, components |
 
+### Design skills
+
+Three complementary skills for frontend/UI work — used together, not as alternatives. Live in `.claude/skills/` and `.cursor/skills/`.
+
+| Skill | Trigger |
+|---|---|
+| `emil-design-eng/` | Animation decisions, UI micro-polish, interaction craft |
+| `taste-skill/` | Anti-slop full frontend pass: layout, typography, motion, spacing, pre-flight check |
+| Impeccable | 23 slash commands (`/polish`, `/audit`, `/critique`, `/bolder`, `/quieter`, `/animate`...) — installed separately, not copied as a static file: `npx impeccable install` |
+
 ---
 
 ## Commands
@@ -90,6 +102,7 @@ Slash commands in `.claude/commands/`.
 
 - `/audit` — runs `project-auditor` and updates `PROJECT_MEMORY.md`
 - `/ship` — runs `deploy-checker` (+ `vercel-deploy` if needed), summarizes in three lists, asks before auto-fixing
+- `/memory` — reads `PROJECT_MEMORY.md`, summarizes current state and pending tasks by impact, suggests what to tackle next
 
 ---
 
