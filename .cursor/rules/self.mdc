@@ -1,0 +1,38 @@
+---
+description: Memoria propia del framework nachiAgents (no la plantilla de cliente)
+alwaysApply: true
+---
+
+# nachiAgents — memoria del framework
+
+Este repo **es** el framework. No es un proyecto cliente.
+
+## Leer primero
+
+- `PROJECT_MEMORY.md` (raíz) — estado vivo: agentes/skills actuales,
+  decisiones, pendientes, gotchas.
+- `.claude/CLAUDE.md` — contexto corto del framework (importa la
+  memoria de arriba).
+
+## No confundir
+
+| Archivo | Rol |
+|---|---|
+| `CLAUDE.md` (raíz) | Plantilla que `install.sh` copia a proyectos cliente |
+| `templates/PROJECT_MEMORY.md` | Template vacío para clientes |
+| `PROJECT_MEMORY.md` (raíz) | Memoria real de **este** repo |
+| `.claude/CLAUDE.md` | Contexto Claude Code del framework |
+| `.cursor/rules/self.mdc` | Esta regla |
+
+## Cuando Nacho pregunta por updates
+
+Si pregunta "¿hay algo para actualizar?", "¿alguna librería?",
+"¿falta un agente?": comparar `PROJECT_MEMORY.md` + README con el
+contenido real de `agents/`, `skills/`, `commands/` e `install.sh`.
+Proponer cambios concretos al framework, no a una app de producto.
+
+## Actualizar memoria
+
+Después de cambios significativos al framework (nuevo agente/skill,
+cambio de install, decisión de diseño), actualizar
+`PROJECT_MEMORY.md`.

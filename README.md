@@ -20,10 +20,11 @@ The core principle: **Claude Code reads and generates prompts. Cursor Agent exec
 
 ```
 nachiAgents/
-├── CLAUDE.md                     ← base context, always active (web variant)
+├── CLAUDE.md                     ← base context, always active (web variant) — CLIENT TEMPLATE
+├── PROJECT_MEMORY.md             ← live memory of THIS framework (not copied to clients)
 ├── install.sh                    ← copies everything to .claude/ in the target project
 ├── templates/
-│   ├── PROJECT_MEMORY.md         ← live project memory (imported by CLAUDE.md)
+│   ├── PROJECT_MEMORY.md         ← empty template copied to client projects
 │   ├── CLAUDE-mobile.md          ← Expo / React Native variant
 │   ├── CLAUDE-automation.md      ← Python / FastAPI variant
 │   └── cursor-rules/
@@ -31,8 +32,12 @@ nachiAgents/
 ├── agents/                       ← subagents with specific tasks and tools
 ├── skills/                       ← playbooks loaded on demand per task
 ├── commands/                     ← slash commands (/audit, /ship, /memory)
-└── .claude/skills/ · .cursor/skills/
-                                  ← design skills (emil-design-eng, taste-skill)
+├── .claude/
+│   ├── CLAUDE.md                 ← framework self-context (imports PROJECT_MEMORY.md)
+│   └── skills/                   ← design skills (emil-design-eng, taste-skill)
+└── .cursor/
+    ├── rules/self.mdc            ← framework self-context for Cursor
+    └── skills/                   ← design skills mirror
 ```
 
 ---
@@ -47,7 +52,7 @@ Three variants exist for different project types: `web` (default), `mobile` (Exp
 
 ### `templates/PROJECT_MEMORY.md`
 
-Live, project-specific memory: current state, architecture decisions, pending tasks, known gotchas. Copied to each project root and updated as the project evolves.
+Empty template copied to each **client** project root. There it becomes the live, project-specific memory (state, decisions, pending, gotchas). This repo's own memory is the root `PROJECT_MEMORY.md` — see [Framework self-memory](#framework-self-memory).
 
 ### `templates/cursor-rules/nachiagents.mdc`
 
@@ -125,6 +130,26 @@ Slash commands in `.claude/commands/`.
 ```
 
 Copies `agents/` and `skills/` to `.claude/` in the target project. Copies `CLAUDE.md` and `PROJECT_MEMORY.md` only if they don't already exist. Adds `.claude/` and `.cursor/` to `.gitignore` automatically.
+
+---
+
+## Framework self-memory
+
+This repo distributes `CLAUDE.md` + `templates/PROJECT_MEMORY.md` to
+client projects. Those files must stay client-agnostic — anything put
+in the root `CLAUDE.md` gets copied by `install.sh` to every install.
+
+The framework's **own** memory lives elsewhere so it never leaks:
+
+| File | Role |
+|---|---|
+| `PROJECT_MEMORY.md` (root) | Live memory of nachiAgents itself |
+| `.claude/CLAUDE.md` | Claude Code project memory (imports `@../PROJECT_MEMORY.md`) |
+| `.cursor/rules/self.mdc` | Same idea for Cursor (`alwaysApply: true`) |
+| `templates/PROJECT_MEMORY.md` | Empty template copied to client projects |
+
+Come back to this repo and ask "anything to update?" — Cursor / Claude
+Code read `PROJECT_MEMORY.md` without needing a handoff first.
 
 ---
 
