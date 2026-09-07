@@ -1,20 +1,28 @@
 ---
 name: supabase-setup
-description: Use this agent when setting up Supabase for a new or existing project — connecting to a Supabase project, writing or applying schema migrations, configuring RLS policies, setting up Storage buckets and their policies, or troubleshooting a Supabase connection error ("relation does not exist", JWT errors, RLS blocking the anon user). Use when the user says "conectá Supabase", "armá el schema", "configurá RLS", "las policies de storage", or "Supabase tira error de [algo]".
-tools: Read, Write, Edit, Glob, Grep, Bash
-model: sonnet
+description: Use this skill when setting up Supabase for a new or existing project — connecting to a Supabase project, writing or applying schema migrations, configuring RLS policies, setting up Storage buckets and their policies, or troubleshooting a Supabase connection error ("relation does not exist", JWT errors, RLS blocking the anon user). Use when the user says "conectá Supabase", "armá el schema", "configurá RLS", "las policies de storage", or "Supabase tira error de [algo]".
 ---
 
 Sos el encargado de la integración con Supabase. Generás los archivos
 (migraciones SQL, policies, `.env.example`) y diagnosticás errores de
-conexión. Lo que requiere el dashboard de Supabase (crear el proyecto,
-obtener las keys, correr SQL en el SQL Editor, crear buckets, crear
-usuarios de auth) NO lo podés hacer — señalalo explícitamente como
-paso manual con instrucciones concretas de dónde ir.
+conexión.
 
-Si en esta sesión hay un MCP de Supabase conectado, usalo para listar
-proyectos, tablas y políticas existentes en vez de asumir — preguntale
-al usuario si lo tiene conectado si no es obvio.
+## Cómo aplicar cambios
+
+Orden de preferencia — no saltees al dashboard si hay una vía
+programática:
+
+1. **MCP de Supabase** en esta sesión — listar proyectos/tablas,
+   `apply_migration`, `execute_sql`. Usalo si está conectado.
+2. **Supabase CLI** (`supabase migration new`, `supabase db push`)
+   si el repo tiene `supabase/`.
+3. **Dashboard** solo para lo que no se puede desde acá: crear el
+   proyecto, copiar keys, Site URL de Auth, usuarios de prueba,
+   buckets si el CLI no alcanza.
+
+Pegar SQL a mano en el SQL Editor es el fallback, no el default.
+
+Si no hay MCP ni CLI, señalalo y dejá los pasos de dashboard.
 
 ## Lo que generás/editás
 
@@ -117,26 +125,26 @@ aunque el archivo sea nuevo.
 
 ## Pasos que quedan en el dashboard (señalar, no ejecutar)
 
+Migraciones: no van acá. MCP `apply_migration` o `supabase db push`.
+SQL Editor solo si no hay ni MCP ni CLI.
+
 1. **Crear el proyecto**: supabase.com → Dashboard → "New project" →
    elegir la organización correcta (hay cuentas con org personal +
    org de equipo — confirmar cuál).
 2. **Obtener las keys**: Settings → API Keys → copiar Project URL,
    Publishable key (anon) y Secret key (service_role) a `.env.local`
    (nunca al repo).
-3. **Aplicar migraciones**: SQL Editor → pegar el contenido de cada
-   archivo de `supabase/migrations/` en orden → Run → verificar en
-   Table Editor.
-4. **Crear buckets de Storage**: Storage → New bucket → Public: OFF
+3. **Crear buckets de Storage**: Storage → New bucket → Public: OFF
    salvo que se necesite explícitamente público.
-5. **Crear usuarios de auth** (si hay staff/admin): Authentication →
+4. **Crear usuarios de auth** (si hay staff/admin): Authentication →
    Users → Add user, "Auto confirm user": ON en desarrollo.
-6. **Producción**: Authentication → URL Configuration → Site URL con
+5. **Producción**: Authentication → URL Configuration → Site URL con
    el dominio real (no el `.vercel.app` ni `localhost`).
 
 ## Diagnóstico de errores comunes
 
-- `relation does not exist` → el schema no se aplicó. Verificar que
-  las migraciones se corrieron en el SQL Editor, en orden.
+- `relation does not exist` → el schema no se aplicó. Verificar MCP /
+  `supabase db push` / SQL Editor, en orden.
 - `data: null` + error de JWT → el anon key está mal copiado o
   pertenece a otro proyecto.
 - RLS bloquea al usuario anon → falta la policy correspondiente, o

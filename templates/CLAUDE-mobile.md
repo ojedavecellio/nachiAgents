@@ -16,19 +16,28 @@ dictan decisiones.
 ## Stack
 
 ```
-expo (~54.x)
-expo-router (~6.x)
-react (19.x)
-react-native (0.81.x)
+expo (~57.x)          ← npx expo install; no bajar de expo@57.0.9
+                       (regresión de memoria Hermes V1 en 56 y 57 temprano)
+react (19.2.x)
+react-native (0.86.x)
 typescript (~5.x)
+Node 22.13+           ← mínimo del SDK 57
 ```
 
+Dependencias de Expo (`expo-router`, `expo-sqlite`, etc.): siempre
+`npx expo install`, nunca el latest suelto de npm.
+
+New Architecture es obligatoria (SDK 55+). No hay opt-out.
+React Compiler recomendado en proyectos nuevos:
+`experiments.reactCompiler` en `app.json`.
+
 UI: React Native Paper para componentes base si hace falta. Reanimated
-para animaciones (gestos, transiciones) — requiere el plugin de Babel;
-sin él las animaciones fallan en runtime sin error claro. Gesture
-Handler para interacciones táctiles complejas. `ActionSheetIOS` es
-iOS-only — si hay planes de soporte Android, abstraer desde el
-principio.
+para animaciones — requiere `react-native-worklets` y el plugin de
+Babel; sin él las animaciones fallan en runtime sin error claro.
+Gesture Handler para interacciones táctiles complejas. `ActionSheetIOS`
+es iOS-only — si hay planes de soporte Android, abstraer desde el
+principio. Audio/video: `expo-audio` / `expo-video` — `expo-av` ya no
+existe en este SDK.
 
 Sin Tailwind/NativeWind — StyleSheet de React Native o inline.
 
@@ -93,30 +102,14 @@ TypeScript strict, sin `any` implícito. Un archivo = una
 responsabilidad. Sin comentarios obvios. Testing mínimo: lógica de
 negocio core si la hay, no UI.
 
-## Formato de prompts para Cursor
+## Antes de arrancar cualquier tarea
 
-Todo prompt destinado a ser pegado en Cursor va precedido del título
-**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
-sin excepción.
+Anunciar qué recursos se van a usar:
+> "Para esto voy a usar: `[skill]`"
 
-Antes de armar un prompt, evaluar el costo:
-
-- **El prompt es obvio sin leer nada** → armarlo corto y pasarlo.
-- **Para armar el prompt habría que leer archivos o correr comandos**
-  → delegarle la tarea completa a Cursor directamente.
-
-## Regla fundamental
-
-Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
-sea necesario para entender el contexto, pero **no corre bash, no
-ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
-explícitamente.
-
-Antes de arrancar cualquier tarea, avisar:
-> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
-> querés el prompt para Cursor?"
-
-Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos".
+Cursor es el único agente. Ejecuta: lee el repo, sigue las skills
+en `.cursor/skills/`, edita archivos. No armes prompts para pegar
+en otro lado.
 
 ## Memoria del proyecto
 
@@ -135,24 +128,18 @@ Después de un cambio significativo, actualizarlo.
   (re-renders, hooks mal usados). Aplica igual en React Native. Correr
   antes de un build de producción si hubo cambios grandes de
   componentes.
-- **`/plugin install claude-code-setup@claude-plugins-official`** —
-  setup asistido de Claude Code en un proyecto Expo nuevo.
-- **`claude plugin install figma@claude-plugins-official`** — MCP de
-  Figma para traer specs de diseño directo al contexto cuando hay que
-  implementar una pantalla 1:1 desde un diseño.
+- **Figma** — si hay un MCP de Figma conectado en esta sesión, usalo
+  para traer specs cuando hay que implementar una pantalla 1:1.
 
 ## Flujos de trabajo
 
-Todos los flujos arrancan igual: Claude Code entiende el contexto y
-arma el prompt. Cursor ejecuta. Claude Code verifica.
+Leé y seguí `.cursor/skills/<nombre>/SKILL.md`, y ejecutá.
 
-**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
-instrucciones de `.claude/agents/project-auditor.md` y auditá este
-proyecto."*
+**Auditoría del proyecto** → skill `project-auditor`.
 
-**Antes de un build de producción con `eas build`** → prompt para
-Cursor: *"Seguí las instrucciones de `.claude/agents/deploy-checker.md`."*
-Confirmar que las API keys están en EAS Secrets, nunca hardcodeadas.
+**Antes de un build de producción con `eas build`** → skill
+`deploy-checker`. Confirmar que las API keys están en EAS Secrets,
+nunca hardcodeadas.
 
-**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho
-para pegar en Agents Window.
+**Idea cruda / spec** → `product-discovery` y `feature-spec`. No
+código de producto hasta que haya spec.

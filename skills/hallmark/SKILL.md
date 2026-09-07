@@ -8,8 +8,9 @@ description: Use this skill for visual redesigns, aesthetic reviews, or any UI t
 Checklist de diseño para que una UI no tenga "olor a IA": layouts
 genéricos, tipografía por default, paleta sin intención, spacing
 inconsistente. Se aplica como pase final antes de dar por terminada
-una pantalla visual — no reemplaza a `gsap-motion`/`three-js` (esos
-definen el movimiento, esta skill define el look).
+una pantalla visual — no reemplaza a GSAP / R3F (el movimiento va
+por las skills oficiales de GSAP o las docs actuales de R3F; esta
+skill define el look).
 
 ## Cuándo usarla
 
@@ -67,9 +68,8 @@ donde no hay uno.
    qué está bien.
 3. **Priorizar** — no todos los hallazgos son iguales. Separar en
    "rompe la percepción de calidad" vs "detalle menor".
-4. **Prompt para Cursor** — los cambios van como prompt concreto,
-   siguiendo el formato estándar del repo. No listar los 65 gates
-   completos en el prompt — traducir a cambios puntuales.
+4. **Aplicar** — los cambios van como edits concretos en el código.
+   No listar un checklist genérico: traducir a cambios puntuales.
 
 ## Qué NO hacer
 

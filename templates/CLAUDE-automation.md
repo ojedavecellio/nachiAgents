@@ -115,30 +115,14 @@ comentarios obvios.
 OAuth con Google en callbacks separados (login/callback en distintas
 instancias del Flow) puede requerir deshabilitar PKCE explícitamente.
 
-## Formato de prompts para Cursor
+## Antes de arrancar cualquier tarea
 
-Todo prompt destinado a ser pegado en Cursor va precedido del título
-**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
-sin excepción.
+Anunciar qué recursos se van a usar:
+> "Para esto voy a usar: `[skill]`"
 
-Antes de armar un prompt, evaluar el costo:
-
-- **El prompt es obvio sin leer nada** → armarlo corto y pasarlo.
-- **Para armar el prompt habría que leer archivos o correr comandos**
-  → delegarle la tarea completa a Cursor directamente.
-
-## Regla fundamental
-
-Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
-sea necesario para entender el contexto, pero **no corre bash, no
-ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
-explícitamente.
-
-Antes de arrancar cualquier tarea, avisar:
-> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
-> querés el prompt para Cursor?"
-
-Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos".
+Cursor es el único agente. Ejecuta: lee el repo, sigue las skills
+en `.cursor/skills/`, edita archivos. No armes prompts para pegar
+en otro lado.
 
 ## Memoria del proyecto
 
@@ -155,24 +139,16 @@ Después de un cambio significativo, actualizarlo.
 
 ## Recommended tools
 
-- **`/plugin install claude-code-setup@claude-plugins-official`** —
-  setup asistido de Claude Code en un proyecto nuevo (permisos, MCPs,
-  hooks). Usar al arrancar el repo, no en proyectos ya configurados.
-
-`react-doctor` y el MCP de `figma` no aplican a este stack (sin capa
+`react-doctor` y el MCP de Figma no aplican a este stack (sin capa
 de React ni UI que implementar desde diseño).
 
 ## Flujos de trabajo
 
-Todos los flujos arrancan igual: Claude Code entiende el contexto y
-arma el prompt. Cursor ejecuta. Claude Code verifica.
+Leé y seguí `.cursor/skills/<nombre>/SKILL.md`, y ejecutá.
 
-**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
-instrucciones de `.claude/agents/project-auditor.md` y auditá este
-proyecto."*
+**Auditoría del proyecto** → skill `project-auditor`.
 
-**Antes de hacer público o deployar** → prompt para Cursor: *"Seguí
-las instrucciones de `.claude/agents/deploy-checker.md`."*
+**Antes de hacer público o deployar** → skill `deploy-checker`.
 
-**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho
-para pegar en Agents Window.
+**Idea cruda / spec** → `product-discovery` y `feature-spec`. No
+código de producto hasta que haya spec.

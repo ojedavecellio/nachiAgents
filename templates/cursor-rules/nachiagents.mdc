@@ -7,36 +7,48 @@ alwaysApply: true
 `CLAUDE.md` en la raíz — convenciones de stack, reglas y flujos de trabajo. Leerlo al arrancar cada sesión.
 `PROJECT_MEMORY.md` en la raíz — estado vivo del proyecto. Leer cuando la tarea involucre dominio del negocio, decisiones de arquitectura, o contexto del problema. Si está vacío o es el template sin llenar, preguntarle al usuario el contexto antes de arrancar.
 
-## Agentes disponibles en `.claude/agents/`
-Leer y seguir el archivo correspondiente cuando la tarea encaje:
-- `project-auditor.md` → auditoría general: "revisá el proyecto", "qué tiene", "state of the app"
-- `deploy-checker.md` → antes de deployar: "quiero deployar", "mergear a main", "ship"
-- `supabase-setup.md` → schema, RLS, migraciones, "relation does not exist"
-- `vercel-deploy.md` → variables de entorno, errores de build en Vercel
-- `performance-auditor.md` → "lento", "Lighthouse", "Speed Index", antes/después de agregar WebGL o canvas
-- `product-discovery.md` → idea cruda de producto/feature sin validar, "tengo una idea", "no sé si vale la pena"
-- `feature-spec.md` → convertir una idea validada en spec construible, "armame el spec de esto"
+Cursor ejecuta: leé el `SKILL.md` correspondiente en `.cursor/skills/` y aplicálo. No armes prompts para pegar en otro lado.
 
-## Skills disponibles en `.claude/skills/`
-Leer el SKILL.md correspondiente cuando la tarea lo requiera:
-- `gsap-motion/` → animaciones GSAP, ScrollTrigger, parallax
-- `three-js/` → Three.js / R3F, shaders, partículas
-- `glass-patterns/` → glassmorphism CSS y Liquid Glass
-- `security-review/` → RLS, zod, paginación, headers
-- `git-commits/` → formato de commits
-- `hallmark/` → rediseño visual, criterio estético, anti-AI-slop
-- `nextjs-audit/` → auditoría de seguridad y escalabilidad Next.js
-- `vercel-ui/` → componentes con design system Geist: tokens de color, tipografía, spacing, radios, componentes — usar cuando la tarea sea de UI/diseño visual
+## Playbooks en `.cursor/skills/`
+Leer y seguir el SKILL.md cuando la tarea encaje:
+
+### Auditoría y ship
+- `project-auditor/` → auditoría general: "revisá el proyecto", "qué tiene", "state of the app"
+- `deploy-checker/` → antes de deployar: "quiero deployar", "mergear a main", "ship"
+- `nextjs-audit/` → deep-dive Next.js + Supabase. Lo despacha `/audit` si el proyecto es Next; no es un slash propio
+- `audit/` → `/audit`: corre project-auditor y actualiza PROJECT_MEMORY.md
+- `ship/` → `/ship`: corre deploy-checker (+ vercel-deploy si hay bloqueantes de env)
+- `memory/` → `/memory`: resume PROJECT_MEMORY y sugiere qué atacar
+
+### Infra
+- `supabase-setup/` → schema, RLS, migraciones, "relation does not exist"
+- `vercel-deploy/` → variables de entorno, errores de build en Vercel
+- `performance-auditor/` → "lento", "Lighthouse", "Speed Index", antes/después de agregar WebGL o canvas
+
+### Producto
+- `product-discovery/` → idea cruda de producto/feature sin validar, "tengo una idea", "no sé si vale la pena"
+- `feature-spec/` → convertir una idea validada en spec construible, "armame el spec de esto"
 - `lean-experiments/` → diseñar el experimento más barato para validar una hipótesis de producto antes de construir
 - `rapid-prototype/` → prototipo HTML desechable de una pantalla/flujo antes de construirlo en el stack real
 
-## Design Skills (for frontend/UI work)
-- `.claude/skills/emil-design-eng/SKILL.md` — animation decisions, UI micro-polish (Emil Kowalski)
-- `.claude/skills/taste-skill/SKILL.md` — anti-slop full frontend, dials, pre-flight check (taste-skill)
-- Impeccable: install separately via `npx impeccable install` — 23 commands (/polish, /audit, /critique, /bolder, /quieter, /animate...)
+### Frontend / motion
+- GSAP → skills oficiales (`gsap-react`, `gsap-scrolltrigger`, `gsap-timeline`, `gsap-core`, …). Instalar: `npx skills add greensock/gsap-skills`. Actualizar: `npx skills update`
+- Next APIs / cache → `npx skills add vercel/next.js` (no receta local)
+- Three.js / R3F → sin skill local. Docs actuales. No como adorno.
+- `glass-patterns/` → glassmorphism CSS y Liquid Glass
+- `hallmark/` → rediseño visual, criterio estético, anti-AI-slop (checklist de 4 ejes)
+- `vercel-ui/` → componentes con design system Geist
+- `og-images/` → Open Graph / social card. Trigger: "OG", "og:image", "social card", "imagen al compartir"
+- `og/` → `/og`: diseñar o iterar la social card (usa og-images)
 
-## Commands en `.claude/commands/`
-Cuando el usuario los pida, leer el archivo completo y ejecutar:
-- `/audit` → leer `.claude/commands/audit.md` y ejecutar
-- `/ship` → leer `.claude/commands/ship.md` y ejecutar
-- `/memory` → leer `.claude/commands/memory.md` y ejecutar
+### Seguridad y git
+- `security-review/` → RLS, zod, paginación, headers
+- `git-commits/` → formato de commits. `cyp` = commit + push (no esperar un "y pusheá")
+
+## Design Skills (for frontend/UI work)
+Una skill de look por tarea, no las cuatro juntas:
+- `hallmark/` — punch list anti-slop en una página que ya existe
+- `taste-skill/` — landing / portfolio / redesign greenfield (dials)
+- `vercel-ui/` — UI de producto Geist / Vercel
+- `emil-design-eng/` — motion de un componente
+- Impeccable: `npx impeccable install` — pase de polish (`/polish`, `/critique`, `/bolder`...)

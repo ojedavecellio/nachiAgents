@@ -28,7 +28,7 @@ if [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
-mkdir -p "$TARGET/.claude/agents" "$TARGET/.claude/skills" "$TARGET/.claude/commands" "$TARGET/.cursor/rules" "$TARGET/.cursor/skills"
+mkdir -p "$TARGET/.cursor/rules" "$TARGET/.cursor/skills"
 
 copy_skill() {
   local src="$1"
@@ -39,39 +39,56 @@ copy_skill() {
   fi
 }
 
-cp "$SRC"/agents/*.md "$TARGET/.claude/agents/"
-cp -r "$SRC"/skills/* "$TARGET/.claude/skills/"
+install_playbook() {
+  local src_file="$1"
+  local name
+  name="$(basename "$src_file" .md)"
+  mkdir -p "$TARGET/.cursor/skills/$name"
+  cp "$src_file" "$TARGET/.cursor/skills/$name/SKILL.md"
+}
 
-# Cursor rules — mapa de contexto para Cursor Agent
-cp "$SRC/templates/cursor-rules/nachiagents.mdc" "$TARGET/.cursor/rules/nachiagents.mdc"
+cp -r "$SRC"/skills/* "$TARGET/.cursor/skills/"
 
-for f in "$SRC"/commands/*.md; do
-  base="$(basename "$f")"
-  [ "$base" = "README.md" ] && continue
-  cp "$f" "$TARGET/.claude/commands/"
+for f in "$SRC"/agents/*.md; do
+  [ -f "$f" ] || continue
+  install_playbook "$f"
 done
 
-if [ ! -d "$TARGET/.claude/skills/hallmark" ]; then
-  TMP_HALLMARK="$(mktemp -d)"
-  if git clone --depth 1 -q https://github.com/nutlope/hallmark.git "$TMP_HALLMARK" 2>/dev/null \
-     && [ -d "$TMP_HALLMARK/skills/hallmark" ]; then
-    cp -r "$TMP_HALLMARK/skills/hallmark" "$TARGET/.claude/skills/hallmark"
-    echo "Hallmark instalado en .claude/skills/hallmark/"
-  else
-    echo "No se pudo instalar Hallmark — opcional, instalar a mano si hace falta."
-  fi
-  rm -rf "$TMP_HALLMARK"
-fi
+for f in "$SRC"/commands/*.md; do
+  [ -f "$f" ] || continue
+  base="$(basename "$f")"
+  case "$base" in
+    README.md|commands-README.md) continue ;;
+  esac
+  install_playbook "$f"
+done
 
-# Design skills
-copy_skill ".claude/skills/emil-design-eng" "$TARGET/.claude/skills/emil-design-eng"
+cp "$SRC/templates/cursor-rules/nachiagents.mdc" "$TARGET/.cursor/rules/nachiagents.mdc"
+
 copy_skill ".cursor/skills/emil-design-eng" "$TARGET/.cursor/skills/emil-design-eng"
-copy_skill ".claude/skills/taste-skill" "$TARGET/.claude/skills/taste-skill"
 copy_skill ".cursor/skills/taste-skill" "$TARGET/.cursor/skills/taste-skill"
 
+if [ -f "$SRC/.cursor/skills/design-README.md" ]; then
+  cp "$SRC/.cursor/skills/design-README.md" "$TARGET/.cursor/skills/design-README.md"
+fi
+
 echo ""
-echo "📐 Design skills installed: emil-design-eng, taste-skill"
-echo "   For impeccable (23 commands + CLI detector), run separately: npx impeccable install"
+echo "Skills installed in $TARGET/.cursor/skills/"
+
+if [ "$VARIANT" = "web" ]; then
+  echo "Installing official skills (authors keep them current)..."
+  (
+    cd "$TARGET"
+    npx --yes skills add greensock/gsap-skills -a cursor -s '*' -y \
+      || echo "WARN: no se pudieron instalar greensock/gsap-skills"
+    npx --yes skills add vercel/next.js -a cursor -s '*' -y \
+      || echo "WARN: no se pudieron instalar vercel/next.js skills"
+  )
+  echo "Refresh later: npx skills update -y"
+fi
+
+echo "For impeccable, run separately: npx impeccable install"
+echo "Optional official Hallmark: npx skills add nutlope/hallmark"
 
 case "$VARIANT" in
   web)        CLAUDE_SRC="$SRC/CLAUDE.md" ;;
@@ -97,15 +114,4 @@ else
   echo "PROJECT_MEMORY.md ya existe — no se sobreescribió."
 fi
 
-# Agregar .claude/ y .cursor/ al .gitignore si no están ya
-GITIGNORE="$TARGET/.gitignore"
-for entry in ".claude/" ".cursor/"; do
-  if [ -f "$GITIGNORE" ]; then
-    grep -qF "$entry" "$GITIGNORE" || echo "$entry" >> "$GITIGNORE"
-  else
-    echo "$entry" >> "$GITIGNORE"
-  fi
-done
-echo ".claude/ y .cursor/ agregados al .gitignore"
-
-echo "Listo. Agentes y skills instalados en $TARGET/.claude/"
+echo "Listo. Skills y rules instalados en $TARGET/.cursor/"

@@ -6,57 +6,20 @@ Indie developer. "Vibe coder": construyo con asistencia de AI.
 Prompts directos, sin relleno, sin "depende" sin explicar de qué
 depende.
 
+Cursor es el único agente. Ejecuta: lee el repo, sigue las skills
+en `.cursor/skills/`, edita archivos. No armes prompts para pegar
+en otro lado.
+
 ## Antes de arrancar cualquier tarea
 
 Anunciar qué recursos se van a usar:
-> "Para esto voy a usar: `[agente/skill]`"
+> "Para esto voy a usar: `[skill]`"
 
-Si la tarea requiere varios recursos, listarlos todos. Si no aplica
-ninguno, no anunciar nada.
+Si la tarea requiere varios, listarlos todos. Si no aplica ninguno,
+no anunciar nada.
 
-## Formato de prompts para Cursor
-
-Todo prompt destinado a ser pegado en Cursor va precedido del título
-**Prompt para Cursor:** y dentro de un bloque de código. Siempre,
-sin excepción. Ejemplo:
-
-**Prompt para Cursor:**
-```
-Cambiá preload="auto" a preload="metadata" en VideoShowcase.tsx.
-```
-
-Antes de armar un prompt, evaluar el costo:
-
-- **El prompt es obvio sin leer nada** (el usuario ya dio toda la
-  info) → armarlo corto y pasarlo. Cursor conoce el repo, no hace
-  falta explicarle cómo buscar ni agregar restricciones obvias.
-- **Para armar el prompt habría que leer archivos o correr comandos**
-  → no armar el prompt. Delegarle la tarea completa a Cursor:
-
-```
-[descripción de la tarea]. Usá el contexto del repo para resolverlo.
-```
-
-El criterio es simple: si Claude Code tiene que trabajar para armar
-el prompt, ese trabajo lo hace Cursor.
-
-## Regla fundamental
-
-Claude Code nunca ejecuta trabajo por su cuenta. Lee el repo cuando
-sea necesario para entender el contexto, pero **no corre bash, no
-ejecuta agents ni skills, no edita archivos** sin que Nacho lo pida
-explícitamente.
-
-El rol de Claude Code es: leer, pensar, armar prompts para Cursor, y
-confirmar antes de hacer cualquier cosa que gaste tool calls.
-
-Antes de arrancar cualquier tarea, avisar:
-> "Para esto voy a necesitar [leer X / correr Y]. ¿Lo hago yo o
-> querés el prompt para Cursor?"
-
-Solo trabajar sin preguntar si Nacho dice explícitamente "hacelo vos"
-o "corré esto vos". En cualquier otro caso, el output es un prompt
-para Cursor — no una ejecución.
+Leé y seguí `.cursor/skills/<nombre>/SKILL.md` cuando la tarea
+encaje, y ejecutá.
 
 ## Lenguaje y tipado
 
@@ -75,54 +38,49 @@ Estado: local con `useState` hasta que duela. Context si el estado cruza
 2-3 niveles de componentes con frecuencia. Zustand solo si Context no
 alcanza y el estado es complejo. Nunca Redux.
 
-React Query para datos remotos cuando hay fetching real. No cachear a
-mano con `useState` + `useEffect`.
+Datos remotos: Server Components (`fetch` / cliente Supabase server)
+para la primera pintura. TanStack Query (`@tanstack/react-query`) solo
+cuando el cliente necesita polling, infinite scroll, cache cruzando
+rutas u optimistic updates — prefetch + `HydrationBoundary`, no
+`useState` + `useEffect`. Import desde `@tanstack/react-query`, no
+"React Query" como paquete.
+
+## Next.js
+
+App Router. APIs, cache y proxy: skills oficiales de Next
+(`npx skills add vercel/next.js`). No hay receta local — ellos las
+actualizan. `npx skills update` cuando haga falta.
 
 ## Animación
 
-GSAP para scroll narrativo, timelines, pin de secciones. Framer Motion
-para transiciones de componentes/gestos. Lenis para smooth scroll. No
-mezclar los tres sin razón — uno principal, el otro solo donde el
-primero no alcanza. Ver skill `gsap-motion` para setup y patrones
-completos.
+GSAP para scroll narrativo, timelines, pin de secciones — skills
+oficiales (`npx skills add greensock/gsap-skills`: `gsap-react`,
+`gsap-scrolltrigger`, `gsap-timeline`, etc.). Motion (`motion/react`)
+para transiciones de componentes/gestos. Lenis para smooth scroll.
+No mezclar los tres sin razón. No instalar `framer-motion`; el paquete
+es `motion`.
+
+Three.js / R3F: sin receta local (no hay skill oficial que valga la
+pena copiar). Docs actuales de R3F. v9 es estable; v10 (WebGPU) sigue
+en alpha — no en producción. Solo si el brief lo pide; CSS o un video
+loop si alcanza.
 
 ## Diseño visual
 
-Para proyectos donde el aspecto visual importa (landings, portfolios,
-cualquier UI que tiene que parecer hecha por diseñador) — skill
-`hallmark` (criterio anti-AI-slop de Together AI: 22 temas, tipografía,
-color, layout, 65 slop gates antes de responder). Complementa a
-`gsap-motion`/`three-js`: Hallmark decide el look, los otros cómo se
-mueve. Si el proyecto ya tiene un design system cerrado, especificarlo
-explícitamente para que el modelo no lo override.
+Despacho — una skill de look por tarea, no las cuatro juntas:
 
-Para componentes que deben seguir el design system de Vercel — skill
-`vercel-ui` (tokens Geist: paleta completa, tipografía, spacing,
-radios, componentes). Usarla cuando se trabaje en proyectos deployados
-en Vercel o cuando se pida explícitamente estilo Geist.
+- **Página existente que "parece IA" / punch list** → `hallmark`
+  (checklist de 4 ejes). No overridear un design system cerrado.
+- **Landing / portfolio / redesign greenfield** → `taste-skill`
+  (dials + pre-flight). No dashboards ni tablas.
+- **UI de producto con look Geist / deployada en Vercel** → `vercel-ui`.
+- **Motion de un componente** (modal, botón, gesture) → `emil-design-eng`.
+- **Card al compartir** → `og-images`.
 
-## Design Skills
-
-Tres skills complementarias para frontend/UI — usalas juntas, no son
-alternativas:
-
-- **`emil-design-eng`** — decisiones de animación, micro-polish de
-  componentes e interacciones. Cuando construís o revisás código de
-  motion/interaction.
-- **`taste-skill`** — anti-slop full frontend: layout, tipografía,
-  motion, spacing, pre-flight check. Landings, portfolios, redesigns
-  (no dashboards ni tablas de datos). Dials: DESIGN_VARIANCE /
-  MOTION_INTENSITY / VISUAL_DENSITY (1–10).
-- **Impeccable** — 23 comandos slash (`/polish`, `/audit`, `/critique`,
-  `/bolder`, `/quieter`, `/animate`...) + detector CLI. Para passes de
-  polish y audit. No se copia estático — se instala aparte:
-
-```bash
-npx impeccable install
-```
-
-Capas: impeccable → vocabulario y anti-patterns; taste-skill → brief,
-dials y layout; emil-design-eng → framework de animación y micro-detalle.
+`gsap` / R3F definen cómo se mueve, no el look — GSAP via skills
+oficiales, Three.js via docs actuales. Sin receta local.
+Impeccable (`npx impeccable install`) es un pase de polish aparte,
+no se copia en el install.
 
 ## IA / LLM
 
@@ -148,7 +106,15 @@ herramientas personales de un solo usuario.
 Vercel para todo lo web, GitHub conectado para auto-deploy en push a
 `main`. Variables `NEXT_PUBLIC_*` solo para lo que puede ser público —
 nunca `service_role` con ese prefijo. Cambios en variables `NEXT_PUBLIC_*`
-requieren redeploy (se embeben en build time).
+requieren redeploy (se embeben en build time). Sitio público:
+`metadataBase` + OG 1200×630 (`next/og`). Después del deploy, revisar
+la card en el tab Open Graph del deployment. Skill `og-images` para
+diseñarla e iterarla — no inventar un PNG genérico.
+
+## Git
+
+`cyp` = commit + push. Cuando Nacho dice `cyp`, seguí `git-commits`
+(Conventional Commits en inglés), commit, y push a origin.
 
 ## Convenciones de proyecto
 
@@ -173,21 +139,16 @@ del flujo default:
   `nextjs-audit`, que cubre el stack completo (seguridad, routing,
   data fetching) pero no entra tan profundo en React puro. Correr
   antes de un `/ship` si hubo cambios grandes de componentes.
-- **`/plugin install claude-code-setup@claude-plugins-official`** —
-  setup asistido de Claude Code en un proyecto nuevo (permisos, MCPs,
-  hooks). Usar al arrancar un repo desde cero, no en proyectos ya
-  configurados con este framework.
-- **`claude plugin install figma@claude-plugins-official`** — MCP de
-  Figma para traer specs de diseño (tokens, medidas, assets)
-  directamente al contexto. Usar cuando hay un diseño en Figma que
-  hay que implementar 1:1, en vez de describir el diseño a mano.
+- **Figma** — si hay un MCP de Figma conectado en esta sesión, usalo
+  para traer specs (tokens, medidas, assets) cuando hay que implementar
+  1:1. Si no está conectado, no inventes el diseño desde una URL.
 
 ## Lo que se evita siempre
 
 Redux, ORMs como primera opción, librerías UI completas, API keys en el
 cliente, TanStack Start como framework base (si Lovable lo genera,
-migrar a Next.js antes de iterar en Cursor o Claude Code), `any`,
-dependencias para cosas que la plataforma ya resuelve.
+migrar a Next.js antes de iterar), `any`, dependencias para cosas que
+la plataforma ya resuelve.
 
 ## Memoria del proyecto
 
@@ -204,44 +165,34 @@ Después de un cambio significativo, actualizarlo.
 
 ## Flujos de trabajo
 
-Todos los flujos arrancan igual: Claude Code entiende el contexto y
-arma el prompt. Cursor ejecuta. Claude Code verifica.
+Leé y seguí `.cursor/skills/<nombre>/SKILL.md`, y ejecutá.
 
-El prompt para cada flujo es siempre el mismo esquema:
-> "Seguí las instrucciones de `.claude/agents/[nombre].md` y [tarea
-> concreta]."
+**Auditoría del proyecto** → skill `project-auditor`. Si el proyecto
+es Next.js + Supabase, después correr `nextjs-audit` (deep-dive).
 
-**Auditoría del proyecto** → prompt para Cursor: *"Seguí las
-instrucciones de `.claude/agents/project-auditor.md` y auditá este
-proyecto."*
+**Antes de deployar** → skill `deploy-checker`.
 
-**Antes de deployar** → prompt para Cursor: *"Seguí las instrucciones
-de `.claude/agents/deploy-checker.md`."*
+**Conectar Supabase** → skill `supabase-setup`.
 
-**Conectar Supabase** → prompt para Cursor: *"Seguí las instrucciones
-de `.claude/agents/supabase-setup.md`."*
+**Build que falla en Vercel / env vars** → skill `vercel-deploy`.
 
-**Build que falla en Vercel / env vars** → prompt para Cursor:
-*"Seguí las instrucciones de `.claude/agents/vercel-deploy.md`."*
+**Performance / Lighthouse** → skill `performance-auditor`.
 
-**Performance / Lighthouse** → prompt para Cursor: *"Seguí las
-instrucciones de `.claude/agents/performance-auditor.md`."*
+**Idea cruda de producto/feature** → skill `product-discovery`
+(research, no código de producto). Si señala un riesgo sin validar,
+usar `lean-experiments` antes de seguir.
 
-**Idea cruda de producto/feature** → correr `.claude/agents/product-discovery.md`
-directo (no es prompt para Cursor — es research/razonamiento, el
-output queda en esta sesión). Si señala un riesgo sin validar, usar
-la skill `lean-experiments` antes de seguir.
-
-**Convertir una idea validada en algo construible** → correr
-`.claude/agents/feature-spec.md` directo. El spec resultante se pega
-en `PROJECT_MEMORY.md` o se usa como contexto para el prompt de
-Cursor que arma la feature.
+**Convertir una idea validada en algo construible** → skill
+`feature-spec`. El spec se pega en `PROJECT_MEMORY.md` o se usa como
+contexto para construir la feature — no construir hasta que haya spec.
 
 **Validar un flujo de UX antes de construirlo posta** → skill
 `rapid-prototype` — genera un HTML desechable, no toca el proyecto
 real.
 
-**Editar archivos** → armar prompt corto para Cursor y dárselo a Nacho para pegar en Agents Window.
+**OG / card al compartir** → skill `og-images` (o `/og`). Diseñar,
+implementar `/api/og`, curl del PNG, mirarlo, iterar. En Vercel: tab
+Open Graph del deployment.
 
 **Lovable / v0** → si el output es TanStack Start, migrar a Next.js
 antes de iterar. Lovable pone `robots: { index: false }` por defecto —

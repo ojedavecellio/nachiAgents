@@ -178,6 +178,4 @@ razón, ese es el culpable.
 ## Ver también
 
 Antes de armar un componente de glass interactivo desde cero, chequear
-el skill `three-js` — sección "Antes de construir desde cero" — por si
-`@react-bits` ya tiene un componente equivalente instalable con
-`npx shadcn add`.
+si `@react-bits` ya tiene un equivalente instalable con `npx shadcn add`.

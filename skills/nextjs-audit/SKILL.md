@@ -1,13 +1,13 @@
 ---
 name: nextjs-audit
 description: >
-  Full-stack audit for local Next.js + Supabase + Vercel projects. Covers security
-  (RLS, route protection, admin access, email headers, auth), database design
-  (schema quality, indexes, relationships), performance (pagination, N+1 queries,
-  bundle size, caching), and scalability strategy (SaaS readiness, infra growth,
-  data retention). Runs entirely on local code — never hits production. Use when
-  user says "audit", "revisar proyecto", "security check", "performance review",
-  "is my app ready", or invokes /nextjs-audit.
+  Deep-dive local audit for Next.js + Supabase + Vercel. Covers security
+  (RLS, route protection via proxy.ts, admin, auth), database, performance
+  (pagination, N+1, Cache Components / use cache), and scalability.
+  Runs on local code only. Use after project-auditor on a Next.js project,
+  when the user asks for a Next security/scalability audit, or when /audit
+  detects Next + Supabase. Not a replacement for /audit (that one updates
+  PROJECT_MEMORY.md).
 ---
 
 # Next.js + Supabase + Vercel — Full Stack Audit
@@ -16,12 +16,13 @@ Comprehensive local-only audit for projects built on the Next.js + Supabase + Ve
 
 ## Invocation
 
-```
-/nextjs-audit [path]
-```
+No slash command propio. `/audit` lo despacha cuando el proyecto es
+Next.js. También se corre si Nacho pide un audit de seguridad/escala
+de un Next + Supabase.
 
-- `path` is optional. If omitted, use the current working directory.
-- The project MUST be a local Next.js project with Supabase. Verify by checking for `next.config.*` and `supabase/` directory (or `.env*` with Supabase keys).
+- El proyecto MUST ser Next.js. Verificar `next.config.*`. Supabase
+  es el caso típico (`supabase/` o keys en `.env*`) — si no hay
+  Supabase, saltar las fases de RLS/DB y seguir con security/perf.
 
 ## Scope
 
@@ -54,13 +55,16 @@ Understand the project before auditing. Gather:
 1. **Project structure:**
    - `app/` vs `pages/` router
    - API routes location (`app/api/` or `pages/api/`)
-   - Middleware file (`middleware.ts`)
+   - `proxy.ts` (Next 16+). `middleware.ts` está deprecado — flaggearlo
+     y recomendar `npx @next/codemod@canary middleware-to-proxy .`
    - Supabase client initialization (where/how)
    - Auth provider (Supabase Auth, NextAuth, custom)
 
 2. **Dependencies:**
    - Read `package.json` — note versions of next, @supabase/supabase-js, @supabase/ssr, @supabase/auth-helpers-nextjs
    - Check for deprecated packages (auth-helpers is deprecated in favor of @supabase/ssr)
+   - `lint` script: if it is `next lint` on Next 16+, the command was
+     removed — flag and suggest `npx @next/codemod@canary next-lint-to-eslint-cli .`
 
 3. **Supabase setup:**
    - `supabase/` directory presence
@@ -104,8 +108,9 @@ Read ALL migration files and check:
 
 #### 2.2 Route Protection
 
-- [ ] `middleware.ts` exists and protects authenticated routes
-- [ ] Check middleware matcher patterns — are admin routes covered?
+- [ ] `proxy.ts` exists and protects authenticated routes (Next 16+).
+      `middleware.ts` is deprecated — flag if still present
+- [ ] Check `proxy` matcher patterns — are admin routes covered?
 - [ ] API routes (`app/api/`) validate session/token before processing
 - [ ] Server actions verify auth before mutations
 - [ ] No client-only auth checks (hiding UI is not security)
@@ -117,7 +122,7 @@ Read ALL migration files and check:
 
 #### 2.3 Admin Protection
 
-- [ ] Admin routes are in a separate route group or have explicit middleware protection
+- [ ] Admin routes are in a separate route group or have explicit proxy/middleware protection
 - [ ] Admin API endpoints check role/permission, not just "is authenticated"
 - [ ] Admin client pages don't just hide UI — server validates role
 - [ ] Supabase admin operations use `service_role` only from server-side (API routes, server actions, edge functions)
@@ -137,7 +142,7 @@ If the project sends emails (check for Resend, SendGrid, nodemailer, Supabase Au
 - [ ] Supabase client is created correctly (separate browser/server clients)
 - [ ] Tokens are not stored in localStorage (should use Supabase's built-in cookie handling with @supabase/ssr)
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` never appears in client-side code or `NEXT_PUBLIC_*` vars
-- [ ] Middleware refreshes session on each request (prevents stale auth)
+- [ ] Session refresh on each request via `proxy.ts` (or leftover middleware) — prevents stale auth
 - [ ] Sign-out properly clears session
 
 #### 2.6 Rate Limiting
@@ -155,7 +160,7 @@ Check if rate limiting is implemented on abuse-prone endpoints:
 - Packages: `@upstash/ratelimit`, `rate-limiter-flexible`, `express-rate-limit`, custom Redis-based
 - Vercel's built-in: `vercel.json` with `"rateLimit"` config
 - Supabase Edge Functions: check if they use rate limiting
-- Next.js middleware-based rate limiting (IP + route based)
+- Next.js `proxy.ts`-based rate limiting (IP + route based); leftover `middleware.ts` is deprecated
 
 **Common failures:**
 - No rate limiting anywhere (CRITICAL on auth endpoints)
@@ -258,7 +263,7 @@ If the project uses AI services (OpenAI, Anthropic, Replicate, Vercel AI SDK, et
 
 #### 2.11 Security Headers (Vercel/Next.js)
 
-Check `next.config.js` or `vercel.json` for security headers:
+Check `next.config.ts` / `next.config.js` / `next.config.mjs` or `vercel.json` for security headers:
 - [ ] `X-Frame-Options: DENY`
 - [ ] `X-Content-Type-Options: nosniff`
 - [ ] `Strict-Transport-Security` (HSTS)
@@ -320,10 +325,11 @@ Read all migration files (in order) and reconstruct the schema. Analyze:
 
 #### 4.2 Caching
 
-- [ ] `revalidate` or `cache` directives on data-fetching routes
-- [ ] Static pages where possible (ISR for semi-dynamic content)
-- [ ] Expensive computations memoized (React cache, unstable_cache)
+- [ ] Cache Components / `use cache` where the page mixes static shell and dynamic data (Next 16)
+- [ ] `revalidate` / `revalidateTag` / `updateTag` used correctly — not the deprecated single-arg `revalidateTag(tag)`
+- [ ] Expensive computations memoized (`cache` from React, not `unstable_cache`)
 - [ ] API responses have appropriate Cache-Control headers
+- [ ] TanStack Query only for client-timeline data (polling, infinite, shared cache); initial paint from Server Components
 
 #### 4.3 Bundle & Loading
 
@@ -473,4 +479,5 @@ A project scoring 80+ is in good shape. Below 60 needs significant work. Below 4
 - Does NOT check deployed Vercel configuration (only local vercel.json)
 - Does NOT run tests or build the project
 
-If the user wants fixes applied after the audit, that's a separate ASDLC cycle using the audit report as input.
+If the user wants fixes applied after the audit, that's a separate
+pass — this skill is read-only.

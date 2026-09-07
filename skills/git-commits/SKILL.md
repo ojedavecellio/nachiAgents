@@ -1,12 +1,18 @@
 ---
 name: git-commits
-description: Use this skill whenever writing a git commit message — after staging changes that are ready to commit, when the user says "hacé el commit", "armá el mensaje de commit", "committeá esto", or right before running git commit. Covers Conventional Commits format, scope naming for this stack, splitting into atomic commits, and what should never appear in a commit message.
+description: Use this skill whenever writing a git commit message — after staging changes that are ready to commit, when the user says "cyp", "hacé el commit", "armá el mensaje de commit", "committeá esto", or right before running git commit. Covers Conventional Commits format, scope naming for this stack, splitting into atomic commits, and what should never appear in a commit message. `cyp` means commit AND push.
 ---
 
 # Mensajes de commit
 
 Conventional Commits, en inglés — el código y los nombres de archivo ya
 están en inglés, el mensaje sigue la misma convención.
+
+## `cyp`
+
+Comando de Nacho: **commit + push**. Si dice `cyp`, armá el mensaje
+con este skill, `git commit`, y `git push` a origin. No hace falta
+que pida el push aparte.
 
 ## Formato
 
@@ -70,11 +76,11 @@ feat(audit): add project-auditor subagent
 
 fix(gallery): prevent panel remount delay on desktop
 
-refactor(gsap): move ScrollTrigger setup to lib/gsap.ts
+refactor(auth): move session refresh to proxy.ts
 
 perf(hero): lazy-mount particle field with IntersectionObserver
 
 docs: add PROJECT_MEMORY.md convention to CLAUDE.md
 
-chore: bump gsap to 3.13
+chore: bump next to 16
 ```

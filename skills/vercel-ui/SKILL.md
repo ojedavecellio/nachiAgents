@@ -1,6 +1,6 @@
-version: alpha
-name: Geist
-description: Vercel’s Geist design system, Light theme (the Dark theme is documented at /design.dark.md).
+---
+name: vercel-ui
+description: Use this skill when building UI that should follow Vercel’s Geist design system — color, typography, spacing, radii, and component tokens. Trigger on Geist, Vercel UI, design-system tokens, or when the project is on Vercel and the task is visual. Light theme only.
 colors:
   primary: "#171717"
   secondary: "#4d4d4d"
@@ -409,7 +409,7 @@ components:
 
 Geist is Vercel’s design system for building consistent, developer-focused interfaces. The aesthetic is minimal and high-contrast: plenty of whitespace, restrained color, and content set on near-neutral surfaces. Prioritize readability and accessibility, and use color to signal state or hierarchy rather than decoration.
 
-This is the Light theme. The Dark theme uses the same token names with different values and lives at `/design.dark.md`. Colors are sRGB hex with Display P3 equivalents.
+This is the Light theme. Colors are sRGB hex with Display P3 equivalents.
 
 ## Colors
 
@@ -426,7 +426,7 @@ Each non-background scale runs 10 steps (`100`–`1000`), and the step encodes i
 - `900` secondary text and icons
 - `1000` primary text and icons
 
-`background-100` is the primary page and card surface; `background-200` is a secondary surface for subtle separation. The `gray-alpha-*` tokens are translucent, so they layer over any background; use them for borders, dividers, overlays, and hover states. Solid `gray-*` holds its contrast on any surface, so use it for text and opaque fills. Accent scales carry meaning: `blue` for success, links, and focus; `red` for errors; `amber` for warnings; plus `green`, `teal`, `purple`, and `pink`. Use the hex tokens everywhere; each accent scale also ships a `*-p3` wide-gamut value in `oklch()` for Display P3 screens. The Dark theme redefines the same names at `/design.dark.md`.
+`background-100` is the primary page and card surface; `background-200` is a secondary surface for subtle separation. The `gray-alpha-*` tokens are translucent, so they layer over any background; use them for borders, dividers, overlays, and hover states. Solid `gray-*` holds its contrast on any surface, so use it for text and opaque fills. Accent scales carry meaning: `blue` for success, links, and focus; `red` for errors; `amber` for warnings; plus `green`, `teal`, `purple`, and `pink`. Use the hex tokens everywhere; each accent scale also ships a `*-p3` wide-gamut value in `oklch()` for Display P3 screens.
 
 ## Typography
 

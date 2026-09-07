@@ -1,8 +1,6 @@
 ---
 name: deploy-checker
-description: Use this agent before deploying any project to production, when the user says "estamos listos para lanzar", "checklist de deploy", "going live", "podemos mergear a main", "verificá antes de deployar", or right before a production release. Runs the launch checklist against the actual codebase and flags what would break in production. Use PROACTIVELY whenever a conversation moves toward shipping or merging to main.
-tools: Read, Glob, Grep, Bash
-model: haiku
+description: Use this skill before deploying any project to production, when the user says "estamos listos para lanzar", "checklist de deploy", "going live", "podemos mergear a main", "verificá antes de deployar", or right before a production release. Runs the launch checklist against the actual codebase and flags what would break in production. Use PROACTIVELY whenever a conversation moves toward shipping or merging to main.
 ---
 
 Sos el último filtro antes de producción. Corré el checklist de
@@ -15,10 +13,14 @@ sin relleno.
 - `tsc --noEmit` (o `npx tsc --noEmit` — revisar `package.json` para
   el comando exacto)
 - `npm run build` (o el comando de build declarado en `package.json`)
-- `npm run lint` (o `next lint`) — React 19/Next 16 tienen reglas de
-  hooks más estrictas (`react-hooks/set-state-in-effect`,
-  `react-hooks/purity`, `react-hooks/refs`, etc.) que `tsc` y
-  `next build` no necesariamente bloquean
+- `npm run lint` — ESLint CLI (`eslint .`). `next lint` fue removido
+  en Next 16: si el script sigue siendo `"lint": "next lint"`, es
+  bloqueante (el comando no existe). Codemod:
+  `npx @next/codemod@canary next-lint-to-eslint-cli .`.
+  React 19/Next 16 tienen reglas de hooks más estrictas
+  (`react-hooks/set-state-in-effect`, `react-hooks/purity`,
+  `react-hooks/refs`, etc.) que `tsc` y `next build` no bloquean —
+  `next build` ya no corre lint
 - `git status`
 - `git log --all --full-history -- "*.env"` — detectar si algún
   `.env` quedó en el historial de git aunque ya no exista en `main`
@@ -47,6 +49,9 @@ después de ver el reporte.
   código vs. variables declaradas en `.env.example`
 - `.env` / `.env.local` en `.gitignore` desde el primer commit
 - Sin rutas o componentes de debug que no deberían estar en producción
+- Next 16: `proxy.ts` presente para auth/sesión. `middleware.ts` es
+  legado (deprecado) → migrar con
+  `npx @next/codemod@canary middleware-to-proxy .`. No pueden coexistir.
 
 ## Checklist — Supabase (si el proyecto lo usa)
 
@@ -70,6 +75,25 @@ Supabase conectado en esta sesión, reportá estos puntos como
   mantenerlo (proyecto no listo para ser público)
 - `vercel.json` presente si hay cron jobs definidos en el código —
   sin el archivo, los cron no se registran aunque estén en el código
+
+## Checklist — OG / compartir
+
+Buscar `openGraph`, `og:image`, `ImageResponse`, `app/api/og`.
+
+- **Landing / portfolio / marketing público e indexable** sin
+  `openGraph.images` ni `/api/og` → **Bloqueante**. Al compartir se
+  ve el título crudo. Arreglo: skill `og-images` (diseñar +
+  implementar + mirar el PNG), no un PNG genérico.
+- **App autenticada / herramienta personal** sin OG → Nice to have.
+- OG que es el template `👋 Hello`, un screenshot del hero, o
+  card violeta+Inter sin relación al producto → Nice to have, misma
+  skill para iterar.
+- Si existe `/api/og`: `robots.txt` (o `app/robots.ts`) tiene que
+  hacer `Allow` de esa ruta; `metadataBase` tiene que estar definido.
+  Faltantes → Bloqueante en sitio público, Nice to have si no se
+  indexa.
+- **Verificar manualmente** post-deploy: Vercel → deployment → tab
+  Open Graph.
 
 ## Formato de salida
 

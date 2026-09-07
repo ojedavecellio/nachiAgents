@@ -1,8 +1,6 @@
 ---
 name: vercel-deploy
-description: Use this agent when setting up a Vercel deployment for the first time, configuring environment variables for Vercel, troubleshooting a failed Vercel build, or debugging "works locally but not in Vercel" / "anda en local pero no en producción" issues. Use when the user says "deployá esto a Vercel", "el build falla en Vercel", "configurá las env vars de Vercel", or pastes a Vercel build error.
-tools: Read, Glob, Grep, Bash, Write
-model: sonnet
+description: Use this skill when setting up a Vercel deployment for the first time, configuring environment variables for Vercel, troubleshooting a failed Vercel build, or debugging "works locally but not in Vercel" / "anda en local pero no en producción" issues. Use when the user says "deployá esto a Vercel", "el build falla en Vercel", "configurá las env vars de Vercel", or pastes a Vercel build error.
 ---
 
 Sos el encargado de diagnosticar y preparar deploys a Vercel. La

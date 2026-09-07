@@ -1,6 +1,7 @@
 # nachiAgents
 
-Configuration framework for Claude Code. Agents, skills, slash commands, and a base `CLAUDE.md` template — installable in any project via `npx`.
+Configuration for Cursor Agent. Skills, playbooks, and a base `CLAUDE.md`
+template — installable in any project via `npx`.
 
 ```bash
 npx github:ojedavecellio/nachiAgents
@@ -10,9 +11,13 @@ npx github:ojedavecellio/nachiAgents
 
 ## What it does
 
-nachiAgents structures AI-assisted development through configuration files (`.md`, `.sh`, `.mdc`) that live directly in each project. Claude Code loads them automatically per session, and Cursor Agent uses them as a context map to load resources on demand.
+nachiAgents structures AI-assisted development through configuration files
+(`.md`, `.sh`, `.mdc`) that live in each project. Cursor loads `CLAUDE.md`
+and `.cursor/rules/nachiagents.mdc` every session, and loads skills from
+`.cursor/skills/` on demand.
 
-The core principle: **Claude Code reads and generates prompts. Cursor Agent executes.** Nothing runs autonomously without explicit confirmation.
+The core principle: **Cursor executes.** Read the matching skill and do
+the work. No prompt-to-paste ritual.
 
 ---
 
@@ -20,19 +25,18 @@ The core principle: **Claude Code reads and generates prompts. Cursor Agent exec
 
 ```
 nachiAgents/
-├── CLAUDE.md                     ← base context, always active (web variant)
-├── install.sh                    ← copies everything to .claude/ in the target project
+├── CLAUDE.md                     ← always-on context (web variant)
+├── install.sh                    ← copies everything to .cursor/ in the target
 ├── templates/
 │   ├── PROJECT_MEMORY.md         ← live project memory (imported by CLAUDE.md)
 │   ├── CLAUDE-mobile.md          ← Expo / React Native variant
 │   ├── CLAUDE-automation.md      ← Python / FastAPI variant
 │   └── cursor-rules/
-│       └── nachiagents.mdc       ← context map for Cursor Agent (alwaysApply: true)
-├── agents/                       ← subagents with specific tasks and tools
-├── skills/                       ← playbooks loaded on demand per task
-├── commands/                     ← slash commands (/audit, /ship, /memory)
-└── .claude/skills/ · .cursor/skills/
-                                  ← design skills (emil-design-eng, taste-skill)
+│       └── nachiagents.mdc       ← skill map (alwaysApply: true)
+├── agents/                       ← playbooks (installed as .cursor/skills/<name>/SKILL.md)
+├── skills/                       ← playbooks loaded on demand
+├── commands/                     ← /audit, /ship, /memory, /og (installed as skills)
+└── .cursor/skills/               ← design skills (emil-design-eng, taste-skill)
 ```
 
 ---
@@ -41,78 +45,103 @@ nachiAgents/
 
 ### `CLAUDE.md`
 
-Base context that Claude Code loads on every session without being asked. Covers stack conventions (TypeScript strict, React 19, Tailwind v4, Supabase, Vercel), animation patterns, design system references, testing policy, and the fundamental rule: Claude Code never executes work autonomously — it reads context and produces prompts for Cursor.
+Always-on context Cursor loads without being asked. Stack conventions
+(TypeScript strict, React 19, Tailwind v4, Supabase, Vercel), animation
+patterns, design system references, testing policy. Cursor is the only
+agent — it executes.
 
-Three variants exist for different project types: `web` (default), `mobile` (Expo/RN), `automation` (Python/FastAPI). Each imports `PROJECT_MEMORY.md` via `@PROJECT_MEMORY.md`.
+Three variants: `web` (default), `mobile` (Expo/RN), `automation`
+(Python/FastAPI). Each imports `PROJECT_MEMORY.md` via `@PROJECT_MEMORY.md`.
 
 ### `templates/PROJECT_MEMORY.md`
 
-Live, project-specific memory: current state, architecture decisions, pending tasks, known gotchas. Copied to each project root and updated as the project evolves.
+Live, project-specific memory: current state, architecture decisions,
+pending tasks, known gotchas. Copied to each project root and updated as
+the project evolves.
 
 ### `templates/cursor-rules/nachiagents.mdc`
 
-Context map for Cursor Agent (`alwaysApply: true`). Points to all available agents, skills, and commands with per-resource triggers so Cursor loads them on demand rather than all at once. Also enforces the resource announcement pattern: before executing any task, announce which agent or skill will be used.
+Context map (`alwaysApply: true`). Points to skills in `.cursor/skills/`
+with per-resource triggers so Cursor loads them on demand. Also enforces
+the resource announcement pattern: before executing any task, announce
+which skill will be used.
 
 ---
 
-## Agents
+## Playbooks (installed as skills)
 
-Subagents in `.claude/agents/`. Each is a focused Claude instance with its own system prompt and allowed tools.
+Source lives in `agents/`. `install.sh` copies each file to
+`.cursor/skills/<name>/SKILL.md`.
 
-| Agent | When to use |
+| Skill | When to use |
 |---|---|
-| `project-auditor.md` | General project audit, state of the app *(model: haiku)* |
-| `deploy-checker.md` | Pre-deploy verification, before merging to main *(model: haiku)* |
-| `supabase-setup.md` | Schema, RLS, migrations |
-| `vercel-deploy.md` | Env vars, Vercel build errors |
-| `performance-auditor.md` | Lighthouse, Speed Index, WebGL/canvas performance |
-| `product-discovery.md` | Structure a raw idea into vision, persona, JTBD, falsifiable hypotheses *(model: opus)* |
-| `feature-spec.md` | Turn a validated idea into a lightweight PRD Cursor can build from |
-
-`project-auditor` and `deploy-checker` run read-only checklists against files — no deep reasoning needed, routed to haiku to cut cost. `product-discovery` benefits from opus for hypothesis framing.
+| `project-auditor` | General project audit, state of the app |
+| `deploy-checker` | Pre-deploy verification, before merging to main |
+| `supabase-setup` | Schema, RLS, migrations |
+| `vercel-deploy` | Env vars, Vercel build errors |
+| `performance-auditor` | Lighthouse, Speed Index, WebGL/canvas performance |
+| `product-discovery` | Structure a raw idea into vision, persona, JTBD, falsifiable hypotheses |
+| `feature-spec` | Turn a validated idea into a lightweight PRD |
 
 ---
 
 ## Skills
 
-Playbooks in `.claude/skills/`. Claude Code loads the relevant `SKILL.md` when the task matches the trigger.
+Playbooks in `skills/`, copied to `.cursor/skills/`. Cursor loads the
+matching `SKILL.md` when the task matches the trigger.
 
 | Skill | Trigger |
 |---|---|
-| `gsap-motion/` | GSAP animations, ScrollTrigger, parallax |
-| `three-js/` | Three.js / R3F, shaders, particles |
 | `glass-patterns/` | Glassmorphism CSS, Liquid Glass |
 | `security-review/` | RLS, zod, pagination, security headers |
 | `git-commits/` | Conventional Commits format |
-| `hallmark/` | Visual redesign, aesthetic review, anti-AI-slop |
+| `hallmark/` | Visual redesign, 4-axis anti-AI-slop checklist |
 | `nextjs-audit/` | Next.js security and scalability audit |
-| `vercel-ui/` | Geist design system tokens: colors, typography, spacing, components |
+| `vercel-ui/` | Geist design system tokens |
 | `lean-experiments/` | Design the cheapest experiment that can falsify a product hypothesis |
 | `rapid-prototype/` | Disposable HTML prototype of a screen/flow before building it for real |
+| `og-images/` | Open Graph / social cards: design, `next/og`, render the PNG, iterate |
+
+No se copian recetas locales de GSAP ni de Three.js — se pudren.
+
+**Oficiales** (el `install.sh` las agrega en proyectos web; se actualizan con `npx skills update`):
+
+- [greensock/gsap-skills](https://github.com/greensock/gsap-skills) — `gsap-react`, `gsap-scrolltrigger`, `gsap-timeline`, …
+- [vercel/next.js](https://github.com/vercel/next.js/tree/canary/skills) — Cache Components, prefetch, dev-loop
+
+Three.js / R3F: no hay skill oficial que valga. Sin receta local; docs actuales. v9 estable, v10 alpha.
+
+Optional: official Hallmark (`npx skills add nutlope/hallmark`) is
+separate — this repo ships the 4-axis checklist.
 
 ### Design skills
 
-Three complementary skills for frontend/UI work — used together, not as alternatives. Live in `.claude/skills/` and `.cursor/skills/`.
+Una skill de look por tarea, no las cuatro juntas. Viven en
+`.cursor/skills/`.
 
 | Skill | Trigger |
 |---|---|
-| `emil-design-eng/` | Animation decisions, UI micro-polish, interaction craft |
-| `taste-skill/` | Anti-slop full frontend pass: layout, typography, motion, spacing, pre-flight check |
-| Impeccable | 23 slash commands (`/polish`, `/audit`, `/critique`, `/bolder`, `/quieter`, `/animate`...) — installed separately, not copied as a static file: `npx impeccable install` |
+| `hallmark/` | Punch list anti-slop en una página que ya existe |
+| `taste-skill/` | Landing / portfolio / redesign greenfield (dials) |
+| `vercel-ui/` | UI de producto Geist / Vercel |
+| `emil-design-eng/` | Motion de un componente |
+| Impeccable | Pase de polish (`/polish`, `/critique`, `/bolder`...) — aparte: `npx impeccable install` |
 
 ### Product & prototyping
 
-For work that starts before any code — validating an idea, spec'ing a feature, testing a UX flow — the flow is: `product-discovery` (structure the idea, flag the biggest unvalidated risk) → skill `lean-experiments` (design the cheapest test for that risk) → `feature-spec` (once validated, turn it into a lightweight PRD) → optionally skill `rapid-prototype` (disposable HTML mockup to resolve UX uncertainty before writing the spec's user stories). All read-only / research — no code is written until a spec goes to Cursor.
+Work that starts before any product code: `product-discovery` (structure
+the idea, flag the biggest unvalidated risk) → `lean-experiments` (cheapest
+test for that risk) → `feature-spec` (lightweight PRD) → optionally
+`rapid-prototype` (disposable HTML). No product code until there is a spec.
 
 ---
 
-## Commands
+## Commands (installed as skills)
 
-Slash commands in `.claude/commands/`.
-
-- `/audit` — runs `project-auditor` and updates `PROJECT_MEMORY.md`
-- `/ship` — runs `deploy-checker` (+ `vercel-deploy` if needed), summarizes in three lists, asks before auto-fixing
+- `/audit` — `project-auditor`; si el proyecto es Next, también `nextjs-audit`. Actualiza `PROJECT_MEMORY.md`
+- `/ship` — runs `deploy-checker` (+ `vercel-deploy` if needed), summarizes in three lists, asks before auto-fixing. Large React changes: `npx react-doctor@latest`
 - `/memory` — reads `PROJECT_MEMORY.md`, summarizes current state and pending tasks by impact, suggests what to tackle next
+- `/og` — designs or iterates the project's Open Graph / social card (`og-images` skill)
 
 ---
 
@@ -124,7 +153,11 @@ Slash commands in `.claude/commands/`.
 ./install.sh /path/to/project automation   # Python / FastAPI
 ```
 
-Copies `agents/` and `skills/` to `.claude/` in the target project. Copies `CLAUDE.md` and `PROJECT_MEMORY.md` only if they don't already exist. Adds `.claude/` and `.cursor/` to `.gitignore` automatically.
+Copies playbooks to `.cursor/skills/` and the context map to
+`.cursor/rules/`. On the **web** variant, also installs official
+GSAP + Next skills (`npx skills add`). Copies `CLAUDE.md` and
+`PROJECT_MEMORY.md` only if they don't already exist. Does not
+gitignore `.cursor/` — skills travel with the repo.
 
 ---
 
@@ -134,14 +167,14 @@ Copies `agents/` and `skills/` to `.claude/` in the target project. Copies `CLAU
 
 - **gstack / VoltAgent** — covered by `project-auditor` + `deploy-checker` for this stack. Style conflicts with the rest of the repo.
 - **Agent Teams / Conductor** — parallel execution doesn't match the step-by-step confirmation workflow.
-- **Global skills in `~/.claude/skills/`** — project-level skills are sufficient; global scope adds unnecessary complexity.
-- **`cursor-delegate` with `agent -p`** — manual copy-paste of prompts into Cursor's Agents Window is intentional and preferred.
+- **Global skills in `~/.cursor/skills/`** — project-level skills are sufficient; global scope adds unnecessary complexity.
 
 ---
 
 ## Stack
 
-Built for: Next.js · Supabase · Vercel · TypeScript · React 19 · Tailwind v4
+Built for: Next.js 16 · Supabase · Vercel · TypeScript · React 19 · Tailwind v4
+Mobile variant: Expo SDK 57 · React Native 0.86
 
 ---
 

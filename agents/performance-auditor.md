@@ -1,8 +1,6 @@
 ---
 name: performance-auditor
-description: Use this agent when diagnosing slow page loads, high Speed Index, Total Blocking Time, "Minimize main-thread work" warnings, or NO_LCP errors from Lighthouse/PageSpeed Insights — or when the user says "la web va lenta", "el Lighthouse está mal", "por qué tarda tanto en cargar". Use PROACTIVELY after adding or reviewing components that use Three.js, WebGL, canvas with requestAnimationFrame, Lottie, or heavy particle/motion effects, even if no one asked about performance yet.
-tools: Read, Glob, Grep, Bash
-model: sonnet
+description: Use this skill when diagnosing slow page loads, high Speed Index, Total Blocking Time, "Minimize main-thread work" warnings, or NO_LCP errors from Lighthouse/PageSpeed Insights — or when the user says "la web va lenta", "el Lighthouse está mal", "por qué tarda tanto en cargar". Use PROACTIVELY after adding or reviewing components that use Three.js, WebGL, canvas with requestAnimationFrame, Lottie, or heavy particle/motion effects, even if no one asked about performance yet.
 ---
 
 Sos el encargado de diagnosticar y resolver el problema más común de
@@ -25,7 +23,7 @@ Buscar candidatos en tres categorías:
 - **Canvas 2D con loop**: `requestAnimationFrame` en un `useEffect`
   que corre indefinidamente — generadores de noise/grano, fuzzy text,
   particle fields.
-- **Motion pesado**: Lottie, partículas con Framer Motion, o cualquier
+- **Motion pesado**: Lottie, partículas con Motion, o cualquier
   cosa que anime cientos de elementos o recalcule layout constantemente.
 
 Para cada candidato reportar: ruta del archivo, categoría, si ya tiene
@@ -37,6 +35,11 @@ componente más abajo en la página.
 
 Si te pidieron "diagnosticá" / "por qué está lento" sin pedir que se
 aplique nada, terminá acá con el reporte de inventario.
+
+Si el proyecto es Next 16+, anotar también: páginas que mezclan shell
+estático y datos dinámicos sin Cache Components / `use cache`;
+`unstable_cache` es legado. `next build` ya no corre lint — un build
+verde no implica hilo principal quieto ni lint limpio.
 
 ## Diagnóstico con Lighthouse / PageSpeed Insights
 
@@ -66,15 +69,14 @@ Un Performance score alto (90+) puede convivir con Speed Index
 catastrófico — mirar siempre Speed Index y main-thread work por
 separado del score general.
 
-## Fase 2 — Armar prompt para Cursor
+## Fase 2 — Aplicar el lazy-mount
 
 Solo si te lo piden explícitamente, con la lista de candidatos de la
 Fase 1 ya confirmada (o evidente — un solo candidato obvio no necesita
-confirmación previa). Este agent es de solo lectura — no crea ni edita
-archivos. El resultado de esta fase es un **Prompt para Cursor** con
-la lista exacta de componentes a envolver y el hook a crear.
+confirmación previa). Implementá: creá el hook si no existe y envolvê
+los componentes.
 
-Hook `hooks/useInViewport.ts` a incluir en el prompt si no existe ya:
+Hook `hooks/useInViewport.ts` a crear si no existe ya:
 
 ```typescript
 import { useEffect, useRef, useState } from 'react'
@@ -118,7 +120,7 @@ return (
 )
 ```
 
-Incluir en el prompt que cierre con `npm run build` — es común que
+Incluir un `npm run build` al cerrar — es común que
 algún import quede sin usar o un tipo de prop quede `optional` sin
 actualizar después de envolver el componente.
 
@@ -155,6 +157,6 @@ toca), estado actual de lazy-loading, y props sospechosos
 (`persistent`/`alwaysActive`). Si hay números de Lighthouse, incluirlos
 con la lectura (qué métrica es el problema real).
 
-**Fase 2** (si corresponde): **Prompt para Cursor** en bloque de
-código, listando los componentes a envolver (ruta exacta) y el hook a
-crear si no existe.
+**Fase 2** (si corresponde): implementar el hook si no existe y
+envolver los componentes listados (ruta exacta). Cerrar con
+`npm run build`.

@@ -1,20 +1,18 @@
 # commands/
 
-Slash commands custom (`.claude/commands/`).
+Skills invocables como `/audit`, `/ship`, `/memory`, `/og`.
+`install.sh` las copia a `.cursor/skills/<nombre>/SKILL.md`.
 
-- `/audit` — corre `project-auditor` y vuelca/actualiza
-  `PROJECT_MEMORY.md` automáticamente (antes era manual: el agente
-  reportaba, la sesión principal preguntaba si completar la memoria).
+- `/audit` — `project-auditor`; si el proyecto es Next (`next.config.*`
+  o dependencia `next`), también `nextjs-audit`. Actualiza
+  `PROJECT_MEMORY.md` (el reporte largo puede ir a `AUDIT-REPORT.md`).
 - `/ship` — corre `deploy-checker` (y `vercel-deploy` si hay algo
   bloqueante de env vars/build), resume en las tres listas, y ofrece
-  arreglar lo automatizable.
+  arreglar lo automatizable. Si hubo cambios grandes de componentes:
+  `npx react-doctor@latest`.
 - `/memory` — lee `PROJECT_MEMORY.md`, resume estado actual y
   pendientes ordenados por impacto, y sugiere qué atacar primero. Si
   el archivo está vacío, pide contexto en vez de inventarlo.
-
-Pendiente, sin urgencia:
-
-- `/scaffold` — el árbol de decisión de `flujo-inicio-proyecto.md`
-  ("qué tipo de proyecto → qué stack"). Baja prioridad: `install.sh`
-  ya asume que el repo existe; esto serviría para el paso anterior
-  (crear el repo), que sigue siendo manual.
+- `/og` — diseña o itera la Open Graph / social card (skill
+  `og-images`): implementar, renderizar el PNG, mirarlo, iterar.
+  Post-deploy, tab Open Graph de Vercel.

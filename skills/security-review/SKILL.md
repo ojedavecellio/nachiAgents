@@ -63,6 +63,11 @@ Sin RLS, cualquier usuario autenticado lee los datos de cualquier
 otro. `service_role` bypasea RLS completamente — solo en el servidor,
 nunca en el cliente ni en variables `NEXT_PUBLIC_*`.
 
+**Rutas autenticadas (Next 16+)**: proteger en `proxy.ts` (export
+`proxy`). `middleware.ts` es legado — migrar con
+`npx @next/codemod@canary middleware-to-proxy .`. No dejar los dos
+archivos a la vez: el build falla.
+
 **Inputs**: nunca confiar en datos del cliente. Validar en el servidor
 antes de persistir o procesar.
 
@@ -100,7 +105,7 @@ Sin concatenación de strings para SQL crudo — siempre parámetros. El
 cliente de Supabase y la mayoría de ORMs lo manejan solo; el riesgo
 es en SQL directo.
 
-**Headers de seguridad** en `next.config.js`:
+**Headers de seguridad** en `next.config.ts` (o `.js` / `.mjs`):
 
 ```javascript
 const securityHeaders = [
@@ -171,6 +176,7 @@ inicio. En producción, variables de entorno del sistema, no archivo
 - [ ] `robots.txt`/metadata de indexación configurada según corresponda
 - [ ] Variables de entorno de producción distintas de las de dev
 - [ ] Rate limiting en endpoints que consumen LLM o APIs de terceros
+- [ ] Next 16: rutas autenticadas protegidas en `proxy.ts` (no solo `middleware.ts` legado)
 - [ ] Validación de inputs en el servidor antes de persistir
 - [ ] Sin `console.log` con datos sensibles en producción
 - [ ] `npm audit` sin vulnerabilidades high/critical

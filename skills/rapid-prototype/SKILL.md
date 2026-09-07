@@ -7,7 +7,7 @@ description: Use this skill para generar un prototipo de UI rápido y desechable
 
 Playbook para generar un prototipo de una pantalla o flujo en HTML
 autocontenido, rápido y desechable, antes de escribirle el spec final
-o pedirle a Cursor que lo construya en el stack real. El objetivo es
+o construirlo en el stack real. El objetivo es
 testear el *flujo y la sensación*, no shippear el prototipo — se tira
 después de que cumplió su función.
 
@@ -59,7 +59,7 @@ la prioridad es velocidad, no pulido.
 
 Si el flujo valida — pasar a `feature-spec` con las decisiones de UX
 ya resueltas (menos ambigüedad en las user stories). El prototipo en
-sí no se lleva al proyecto real — Cursor construye la versión real en
+sí no se lleva al proyecto real — la versión de producción se arma en
 el stack del proyecto (React/Tailwind), usando el prototipo como
 referencia visual, no como código a reutilizar.
 
@@ -70,5 +70,5 @@ referencia visual, no como código a reutilizar.
 - No prototipar toda la app de una — una pantalla o un flujo puntual
   por vez.
 - No dejar el prototipo como si fuera código de producción — si
-  Cursor lo termina copiando tal cual al proyecto real, se pierde el
+  se termina copiando tal cual al proyecto real, se pierde el
   propósito (era desechable, no una primera versión del código real).

@@ -1,9 +1,15 @@
 ---
+name: audit
 description: Audita el estado del proyecto con project-auditor y actualiza PROJECT_MEMORY.md con los hallazgos
 ---
 
-Usá el subagente `project-auditor` para auditar el estado actual de
-este proyecto.
+Leé y seguí `.cursor/skills/project-auditor/SKILL.md` para auditar
+el estado actual de este proyecto.
+
+Si el proyecto es Next.js (`next.config.*` o dependencia `next`),
+después leé y seguí `.cursor/skills/nextjs-audit/SKILL.md`. El reporte
+detallado puede ir a `AUDIT-REPORT.md`; en `PROJECT_MEMORY.md` solo
+un resumen de críticos / pendientes, no el scorecard completo.
 
 Cuando termine, escribí los hallazgos en `PROJECT_MEMORY.md`
 directamente, sin preguntar:

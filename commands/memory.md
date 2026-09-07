@@ -1,4 +1,5 @@
 ---
+name: memory
 description: Lee PROJECT_MEMORY.md y sugiere qué atacar primero
 ---
 
