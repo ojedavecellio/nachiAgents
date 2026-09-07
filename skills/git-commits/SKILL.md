@@ -31,7 +31,7 @@ que pida el push aparte.
 - `refactor` — cambio de estructura sin cambiar comportamiento
 - `perf` — mejora de performance
 - `style` — cambios puramente visuales/CSS sin lógica
-- `docs` — documentación (README, comentarios, CLAUDE.md, etc.)
+- `docs` — documentación (README, comentarios, AGENTS.md, etc.)
 - `chore` — config, dependencias, scripts, CI
 - `test` — agregar o ajustar tests
 
@@ -80,7 +80,7 @@ refactor(auth): move session refresh to proxy.ts
 
 perf(hero): lazy-mount particle field with IntersectionObserver
 
-docs: add PROJECT_MEMORY.md convention to CLAUDE.md
+docs: add PROJECT_MEMORY.md convention to AGENTS.md
 
 chore: bump next to 16
 ```

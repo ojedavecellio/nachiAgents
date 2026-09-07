@@ -157,5 +157,5 @@ SQL Editor solo si no hay ni MCP ni CLI.
 Separar en dos listas: **Hecho** (archivos generados/editados, con
 ruta) y **Pendiente en el dashboard** (pasos manuales numerados, con
 la ruta de menú exacta de Supabase). Si encontrás algo que contradice
-`CLAUDE.md` (ej. `service_role` en una variable `NEXT_PUBLIC_*`,
+`AGENTS.md` (ej. `service_role` en una variable `NEXT_PUBLIC_*`,
 tabla sin RLS), marcarlo como bloqueante aparte.

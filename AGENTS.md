@@ -1,7 +1,5 @@
 # Contexto base — Nacho
 
-@PROJECT_MEMORY.md
-
 Indie developer. "Vibe coder": construyo con asistencia de AI.
 Prompts directos, sin relleno, sin "depende" sin explicar de qué
 depende.
@@ -152,8 +150,8 @@ la plataforma ya resuelve.
 
 ## Memoria del proyecto
 
-`PROJECT_MEMORY.md` (importado arriba) es el estado vivo y específico
-de este proyecto. Al arrancar cada sesión, leerlo primero.
+`PROJECT_MEMORY.md` es el estado vivo y específico de este proyecto.
+Al arrancar cada sesión, leerlo primero.
 
 Si está vacío o solo tiene el template sin llenar — antes de hacer
 cualquier otra cosa, preguntarle a Nacho:

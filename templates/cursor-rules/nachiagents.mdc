@@ -4,7 +4,7 @@ alwaysApply: true
 # nachiAgents — Mapa de contexto
 
 ## Contexto del proyecto
-`CLAUDE.md` en la raíz — convenciones de stack, reglas y flujos de trabajo. Leerlo al arrancar cada sesión.
+`AGENTS.md` en la raíz — convenciones de stack, reglas y flujos de trabajo. Cursor lo carga solo. Leerlo al arrancar cada sesión.
 `PROJECT_MEMORY.md` en la raíz — estado vivo del proyecto. Leer cuando la tarea involucre dominio del negocio, decisiones de arquitectura, o contexto del problema. Si está vacío o es el template sin llenar, preguntarle al usuario el contexto antes de arrancar.
 
 Cursor ejecuta: leé el `SKILL.md` correspondiente en `.cursor/skills/` y aplicálo. No armes prompts para pegar en otro lado.

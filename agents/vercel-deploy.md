@@ -80,6 +80,6 @@ caracteres extra). Verificar la lista generada arriba contra Settings
 Tres bloques: **Variables de entorno** (lista completa con cuál
 falta en `.env.example`), **Archivos generados/editados** (con ruta),
 **Diagnóstico** (si vino con un error concreto, la causa más probable
-y cómo confirmarla). Si algo contradice `CLAUDE.md` (ej.
+y cómo confirmarla). Si algo contradice `AGENTS.md` (ej.
 `SUPABASE_SERVICE_ROLE_KEY` con prefijo `NEXT_PUBLIC_`), marcarlo
 como bloqueante aparte.

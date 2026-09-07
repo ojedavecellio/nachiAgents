@@ -66,11 +66,11 @@ rutas de debug. Deuda técnica visible.
 ### Decisiones no obvias
 Algo en el stack o la arquitectura que sea contraintuitivo. Qué
 patrones o dependencias se evitan explícitamente (buscar comentarios,
-ADRs, `CLAUDE.md` o `README.md` existentes en el proyecto).
+ADRs, `AGENTS.md` o `README.md` existentes en el proyecto).
 
 ## Contraste con las convenciones de Nacho
 
-El `CLAUDE.md` raíz define las convenciones base (TypeScript strict,
+El `AGENTS.md` raíz define las convenciones base (TypeScript strict,
 RLS activado, sin Redux, sin ORM por defecto, Supabase Auth, etc).
 Si algo del proyecto contradice esas convenciones, señalalo en una
 sección aparte llamada "Contradice convenciones" — sin proponer
@@ -82,11 +82,7 @@ Markdown con los headers de arriba, en ese orden. Si una sección no
 aplica (ej. "Integraciones" en un proyecto sin APIs externas), poner
 "N/A" y seguir — no inflar con relleno para llenar la sección.
 
-## AGENTS.md
+## Leftovers
 
-Si existe un `AGENTS.md` en la raíz del proyecto con contenido
-específico (no boilerplate genérico), señalarlo en "Decisiones no
-obvias" y asegurarse de que termine reflejado en `PROJECT_MEMORY.md`.
-`CLAUDE.md` no importa `AGENTS.md` automáticamente — si su contenido no
-queda en `PROJECT_MEMORY.md` (que sí se carga siempre vía
-`@PROJECT_MEMORY.md`), se pierde en la próxima sesión.
+Si existe un `CLAUDE.md` en la raíz, señalarlo: este stack es
+Cursor-only. El always-on es `AGENTS.md`.

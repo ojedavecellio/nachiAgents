@@ -1,6 +1,6 @@
 # nachiAgents
 
-Configuration for Cursor Agent. Skills, playbooks, and a base `CLAUDE.md`
+Configuration for Cursor Agent. Skills, playbooks, and a base `AGENTS.md`
 template — installable in any project via `npx`.
 
 ```bash
@@ -12,7 +12,7 @@ npx github:ojedavecellio/nachiAgents
 ## What it does
 
 nachiAgents structures AI-assisted development through configuration files
-(`.md`, `.sh`, `.mdc`) that live in each project. Cursor loads `CLAUDE.md`
+(`.md`, `.sh`, `.mdc`) that live in each project. Cursor loads `AGENTS.md`
 and `.cursor/rules/nachiagents.mdc` every session, and loads skills from
 `.cursor/skills/` on demand.
 
@@ -25,12 +25,12 @@ the work. No prompt-to-paste ritual.
 
 ```
 nachiAgents/
-├── CLAUDE.md                     ← always-on context (web variant)
+├── AGENTS.md                     ← always-on context (web variant)
 ├── install.sh                    ← copies everything to .cursor/ in the target
 ├── templates/
-│   ├── PROJECT_MEMORY.md         ← live project memory (imported by CLAUDE.md)
-│   ├── CLAUDE-mobile.md          ← Expo / React Native variant
-│   ├── CLAUDE-automation.md      ← Python / FastAPI variant
+│   ├── PROJECT_MEMORY.md         ← live project memory
+│   ├── AGENTS-mobile.md          ← Expo / React Native variant
+│   ├── AGENTS-automation.md      ← Python / FastAPI variant
 │   └── cursor-rules/
 │       └── nachiagents.mdc       ← skill map (alwaysApply: true)
 ├── agents/                       ← playbooks (installed as .cursor/skills/<name>/SKILL.md)
@@ -43,15 +43,16 @@ nachiAgents/
 
 ## Core files
 
-### `CLAUDE.md`
+### `AGENTS.md`
 
 Always-on context Cursor loads without being asked. Stack conventions
 (TypeScript strict, React 19, Tailwind v4, Supabase, Vercel), animation
-patterns, design system references, testing policy. Cursor is the only
-agent — it executes.
+choices, design dispatch, testing policy. Cursor is the only agent —
+it executes. Not `CLAUDE.md` (that's Claude Code).
 
 Three variants: `web` (default), `mobile` (Expo/RN), `automation`
-(Python/FastAPI). Each imports `PROJECT_MEMORY.md` via `@PROJECT_MEMORY.md`.
+(Python/FastAPI). `PROJECT_MEMORY.md` is the live project state —
+the agent reads it at the start of each session.
 
 ### `templates/PROJECT_MEMORY.md`
 
@@ -155,8 +156,9 @@ test for that risk) → `feature-spec` (lightweight PRD) → optionally
 
 Copies playbooks to `.cursor/skills/` and the context map to
 `.cursor/rules/`. On the **web** variant, also installs official
-GSAP + Next skills (`npx skills add`). Copies `CLAUDE.md` and
-`PROJECT_MEMORY.md` only if they don't already exist. Does not
+GSAP + Next skills (`npx skills add`). Copies `AGENTS.md` and
+`PROJECT_MEMORY.md` only if they don't already exist. If the target
+still has `CLAUDE.md` and no `AGENTS.md`, it gets renamed. Does not
 gitignore `.cursor/` — skills travel with the repo.
 
 ---

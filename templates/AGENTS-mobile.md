@@ -1,7 +1,5 @@
 # Contexto base (mobile) — Nacho
 
-@PROJECT_MEMORY.md
-
 Indie developer. Vibe coder:
 construyo con asistencia de AI. Prompts directos, sin relleno.
 
@@ -113,7 +111,7 @@ en otro lado.
 
 ## Memoria del proyecto
 
-`PROJECT_MEMORY.md` (importado arriba) es el estado vivo de este
+`PROJECT_MEMORY.md` es el estado vivo de este
 proyecto. Al arrancar cada sesión, leerlo primero.
 
 Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:

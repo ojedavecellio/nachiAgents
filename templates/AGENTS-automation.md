@@ -1,7 +1,5 @@
 # Contexto base (automatización) — Nacho
 
-@PROJECT_MEMORY.md
-
 Indie developer. Vibe coder:
 construyo con asistencia de AI. Prompts directos, sin relleno.
 
@@ -11,7 +9,7 @@ Python para procesamiento de datos, clasificación, automatización de
 tareas, o agentes. FastAPI solo si el output es una API consumida por
 un frontend Next.js, o si necesita UI propia consumible. Si el output
 es directamente una UI para usuarios finales, eso es un proyecto Next.js
-separado (`stack-web`/`CLAUDE.md` web) — proyectos que combinan web +
+separado (`stack-web` / `AGENTS.md` web) — proyectos que combinan web +
 backend de procesamiento son DOS repos separados desde el inicio, no
 un monorepo.
 
@@ -126,7 +124,7 @@ en otro lado.
 
 ## Memoria del proyecto
 
-`PROJECT_MEMORY.md` (importado arriba) es el estado vivo de este
+`PROJECT_MEMORY.md` es el estado vivo de este
 proyecto. Al arrancar cada sesión, leerlo primero. Prestar especial
 atención al schema de `actions.jsonl` y qué adapters están activos
 (memory vs real) — es lo más fácil de perder de vista entre sesiones.

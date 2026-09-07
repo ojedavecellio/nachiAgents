@@ -91,20 +91,28 @@ echo "For impeccable, run separately: npx impeccable install"
 echo "Optional official Hallmark: npx skills add nutlope/hallmark"
 
 case "$VARIANT" in
-  web)        CLAUDE_SRC="$SRC/CLAUDE.md" ;;
-  mobile)     CLAUDE_SRC="$SRC/templates/CLAUDE-mobile.md" ;;
-  automation) CLAUDE_SRC="$SRC/templates/CLAUDE-automation.md" ;;
+  web)        AGENTS_SRC="$SRC/AGENTS.md" ;;
+  mobile)     AGENTS_SRC="$SRC/templates/AGENTS-mobile.md" ;;
+  automation) AGENTS_SRC="$SRC/templates/AGENTS-automation.md" ;;
   *)
     echo "Variante desconocida: '$VARIANT' (usar web | mobile | automation)"
     exit 1
     ;;
 esac
 
-if [ ! -f "$TARGET/CLAUDE.md" ]; then
-  cp "$CLAUDE_SRC" "$TARGET/CLAUDE.md"
-  echo "CLAUDE.md ($VARIANT) copiado a la raíz."
+if [ ! -f "$TARGET/AGENTS.md" ]; then
+  if [ -f "$TARGET/CLAUDE.md" ]; then
+    mv "$TARGET/CLAUDE.md" "$TARGET/AGENTS.md"
+    echo "CLAUDE.md leftover → AGENTS.md."
+  else
+    cp "$AGENTS_SRC" "$TARGET/AGENTS.md"
+    echo "AGENTS.md ($VARIANT) copiado a la raíz."
+  fi
 else
-  echo "CLAUDE.md ya existe — no se sobreescribió."
+  echo "AGENTS.md ya existe — no se sobreescribió."
+  if [ -f "$TARGET/CLAUDE.md" ]; then
+    echo "Sobra CLAUDE.md (Cursor-only). Se puede borrar."
+  fi
 fi
 
 if [ ! -f "$TARGET/PROJECT_MEMORY.md" ]; then
