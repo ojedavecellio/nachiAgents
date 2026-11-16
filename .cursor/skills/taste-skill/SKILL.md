@@ -7,6 +7,7 @@ description: Anti-slop frontend skill for landing pages, portfolios, and redesig
 
 > Landing pages, portfolios, and redesigns. Not dashboards, not data tables, not multi-step product UI.
 > Every rule below is **contextual**. None of it fires automatically. First read the brief, then pull only what fits.
+> `nachi-style` owns tokens, glass, and the ban list. Do not override them. GSAP uses `useGSAP` from `@gsap/react`. The hero stays visible on the first frame: no `opacity: 0` on the LCP element.
 
 ---
 
@@ -16,12 +17,12 @@ Before touching code, **infer what the user actually wants**.
 
 ### 0.A Read these signals first
 
-1. **Page kind** — landing, portfolio, redesign, editorial
-2. **Vibe words** — "minimalist", "Linear-style", "Awwwards", "brutalist", "premium consumer", "Apple-y"
-3. **Reference signals** — URLs, screenshots, brands named
-4. **Audience** — B2B procurement vs design-conscious consumer vs recruiter
-5. **Brand assets** — logo, color, type, photography (for redesigns: starting material, not optional)
-6. **Quiet constraints** — accessibility-first, public-sector, kids' products (OVERRIDE aesthetic preference)
+1. **Page kind**. Landing, portfolio, redesign, editorial
+2. **Vibe words**. "minimalist", "Linear-style", "Awwwards", "brutalist", "premium consumer", "Apple-y"
+3. **Reference signals**. URLs, screenshots, brands named
+4. **Audience**. B2B procurement vs design-conscious consumer vs recruiter
+5. **Brand assets**. Logo, color, type, photography (for redesigns: starting material, not optional)
+6. **Quiet constraints**. Accessibility-first, public-sector, kids' products (OVERRIDE aesthetic preference)
 
 ### 0.B Output a one-line "Design Read" before generating
 
@@ -39,9 +40,9 @@ Do not default to: AI-purple gradients, centered hero over dark mesh, three equa
 
 ## 1. THE THREE DIALS
 
-- **`DESIGN_VARIANCE: 8`** — 1 = Perfect Symmetry, 10 = Artsy Chaos
-- **`MOTION_INTENSITY: 6`** — 1 = Static, 10 = Cinematic / Physics
-- **`VISUAL_DENSITY: 4`** — 1 = Art Gallery / Airy, 10 = Cockpit / Packed Data
+- **`DESIGN_VARIANCE: 8`**: 1 = Perfect Symmetry, 10 = Artsy Chaos
+- **`MOTION_INTENSITY: 6`**: 1 = Static, 10 = Cinematic / Physics
+- **`VISUAL_DENSITY: 4`**: 1 = Art Gallery / Airy, 10 = Cockpit / Packed Data
 
 **Baseline:** `8 / 6 / 4`. Override conversationally, never ask to edit this file.
 
@@ -86,12 +87,12 @@ Do not default to: AI-purple gradients, centered hero over dark mesh, three equa
 | Public-sector UK service | `govuk-frontend` |
 | US public-sector | `uswds` |
 | Modern accessible React foundation | `@radix-ui/themes` |
-| Modern SaaS (you own components) | `shadcn/ui` — NEVER in default state |
+| Modern SaaS (you own components) | `shadcn/ui`: NEVER in default state |
 | Tailwind-based modern SaaS / AI marketing | Tailwind v4 utilities |
 
 **One system per project.** Do not mix systems.
 
-### 2.B Aesthetics (no official package — build with native CSS + Tailwind)
+### 2.B Aesthetics (no official package: build with native CSS + Tailwind)
 
 | Aesthetic | Implementation |
 | --- | --- |
@@ -116,7 +117,7 @@ Do not default to: AI-purple gradients, centered hero over dark mesh, three equa
 
 ### 3.B State
 - Local `useState` / `useReducer` for isolated UI
-- NEVER `useState` for continuous values (mouse, scroll) — use `useMotionValue` / `useTransform`
+- NEVER `useState` for continuous values (mouse, scroll). Use `useMotionValue` / `useTransform`
 
 ### 3.C Icons
 - **Allowed:** `@phosphor-icons/react`, `hugeicons-react`, `@radix-ui/react-icons`, `@tabler/icons-react`
@@ -192,7 +193,7 @@ Discouraged by default. Replace with icon-library glyphs. Override only for expl
 ### 4.8 Image & Visual Asset Strategy
 
 Priority order:
-1. **Image-generation tool first** (if available — use it)
+1. **Image-generation tool first** (if available. Use it)
 2. **Real web images:** `https://picsum.photos/seed/{descriptive-seed}/{w}/{h}`
 3. **Last resort:** labeled placeholder slots + tell user what's needed
 
@@ -230,46 +231,44 @@ Priority order:
 
 ```jsx
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useReducedMotion } from "motion/react";
+import { useGSAP } from "@gsap/react";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function StickyStack({ cards }) {
   const ref = useRef(null);
   const reduce = useReducedMotion();
 
-  useEffect(() => {
+  useGSAP(() => {
     if (reduce || !ref.current) return;
-    const ctx = gsap.context(() => {
-      const cardEls = gsap.utils.toArray(".stack-card");
-      cardEls.forEach((card, i) => {
-        if (i === cardEls.length - 1) return;
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top top",
-          endTrigger: cardEls[cardEls.length - 1],
-          end: "top top",
-          pin: true,
-          pinSpacing: false,
-        });
-        gsap.to(card, {
-          scale: 0.92,
-          opacity: 0.55,
-          ease: "none",
-          scrollTrigger: {
-            trigger: cardEls[i + 1],
-            start: "top bottom",
-            end: "top top",
-            scrub: true,
-          },
-        });
+    const cardEls = gsap.utils.toArray(".stack-card");
+    cardEls.forEach((card, i) => {
+      if (i === cardEls.length - 1) return;
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top top",
+        endTrigger: cardEls[cardEls.length - 1],
+        end: "top top",
+        pin: true,
+        pinSpacing: false,
       });
-    }, ref);
-    return () => ctx.revert();
-  }, [reduce]);
+      gsap.to(card, {
+        scale: 0.92,
+        opacity: 0.55,
+        ease: "none",
+        scrollTrigger: {
+          trigger: cardEls[i + 1],
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
+        },
+      });
+    });
+  }, { scope: ref, dependencies: [reduce] });
 
   return (
     <div ref={ref}>
@@ -283,41 +282,39 @@ export function StickyStack({ cards }) {
 }
 ```
 
-Critical: `start: "top top"`, `pin: true`, cleanup via `ctx.revert()`.
+Critical: `start: "top top"`, `pin: true`. `useGSAP` reverts the scope. Do not use `useLayoutEffect` with `gsap.context`. The opacity above is a scroll state on stacked cards, not a hidden hero.
 
 ### 5.B Horizontal-Pan Canonical Skeleton (GSAP)
 
 ```jsx
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function HorizontalPan({ children }) {
   const wrap = useRef(null);
   const track = useRef(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!wrap.current || !track.current) return;
-    const ctx = gsap.context(() => {
-      const distance = track.current.scrollWidth - window.innerWidth;
-      gsap.to(track.current, {
-        x: -distance,
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrap.current,
-          start: "top top",
-          end: () => `+=${distance}`,
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, wrap);
-    return () => ctx.revert();
-  }, []);
+    const distance = track.current.scrollWidth - window.innerWidth;
+    gsap.to(track.current, {
+      x: -distance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: wrap.current,
+        start: "top top",
+        end: () => `+=${distance}`,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+  }, { scope: wrap });
 
   return (
     <section ref={wrap} className="relative overflow-hidden">
@@ -355,11 +352,13 @@ export function RevealStagger({ items }) {
 }
 ```
 
+No uses este fade en el hero ni en el candidato a LCP. Ahí el texto nace visible.
+
 ### 5.D Forbidden Animation Patterns
 
-- `window.addEventListener("scroll", ...)` — BANNED
-- `useState` for scroll progress — BANNED (re-renders on every frame)
-- `rAF` loops touching React state — use `useMotionValue`
+- `window.addEventListener("scroll",.)`. BANNED
+- `useState` for scroll progress. BANNED (re-renders on every frame)
+- `rAF` loops touching React state. Use `useMotionValue`
 - **NEVER mix GSAP / Three.js with Motion in the same component tree**
 
 ---
@@ -386,7 +385,7 @@ Design for BOTH modes from the start. Use Tailwind `dark:` OR CSS variables (pic
 
 ### 9.G EM-DASH BAN (most violated Tell)
 
-**Em-dash (`—`) is COMPLETELY banned.** Zero em-dashes anywhere:
+**Em-dash (`. `) is COMPLETELY banned.** Zero em-dashes anywhere:
 - Headlines, eyebrows, pills, button text, image captions, body copy, quotes, attribution, alt text
 - Restructure sentences: two sentences with period, comma, or colon
 - Date ranges: hyphen `2018-2026`. Number ranges: hyphen `€40-80k`
@@ -398,7 +397,7 @@ Only permitted dash: regular hyphen `-`
 - NO version labels in hero (V0.6, BETA, EARLY ACCESS)
 - NO section-number eyebrows (`001 · Capabilities`)
 - NO `border-t` + `border-b` on every row of a long list
-- NO middle-dot (`·`) spam — max 1 per line
+- NO middle-dot (`·`) spam. Max 1 per line
 - NO decorative colored status dots on every row
 - NO floating top-right sub-text in section headings
 - NO locale/city/time/weather strips unless brief demands it
@@ -426,7 +425,7 @@ Run EVERY box before outputting code. If any fails, output is not done.
 - [ ] Brief inference declared (one-liner Design Read)?
 - [ ] Dial values explicit and reasoned?
 - [ ] Design system chosen correctly (Section 2)?
-- [ ] ZERO em-dashes (`—`) anywhere?
+- [ ] ZERO em-dashes (`. `) anywhere?
 - [ ] Page Theme Lock: ONE theme for whole page?
 - [ ] Color Consistency Lock: one accent across all sections?
 - [ ] Shape Consistency Lock: one corner-radius system?

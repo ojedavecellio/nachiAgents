@@ -1,15 +1,15 @@
 # Design Skills
 
-Una skill de look por tarea, no las cuatro juntas.
+El look default es `nachi-style`. No se mezcla con otra paleta.
 
 ## Cuál cargar
 
-- **Página existente que "parece IA" / punch list** → `hallmark`
-- **Landing / portfolio / redesign greenfield** → `taste-skill`
-  (dials). No dashboards ni tablas.
-- **UI de producto Geist / Vercel** → `vercel-ui`
-- **Motion de un componente** (modal, botón, gesture) → `emil-design-eng`
+- **Cualquier UI** → `nachi-style` (tokens, vidrio, prohibiciones)
+- **Motion de un componente** (modal, botón, gesture) → `emil-design-eng`,
+  sin pisar los tokens
 - **Card al compartir** → `og-images`
+- `taste-skill` no redefine la paleta. `vercel-ui` solo si el proyecto
+  pidió Geist. No es el Vercel UI SDK.
 
 `gsap` / R3F definen cómo se mueve, no el look. GSAP: skills oficiales.
 Three.js: docs actuales, sin receta local.

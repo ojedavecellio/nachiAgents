@@ -1,6 +1,6 @@
 ---
 name: vercel-ui
-description: Use this skill when building UI that should follow Vercel’s Geist design system — color, typography, spacing, radii, and component tokens. Trigger on Geist, Vercel UI, design-system tokens, or when the project is on Vercel and the task is visual. Light theme only.
+description: Use this skill when building UI that should follow Vercel’s Geist design system. Color, typography, spacing, radii, and component tokens. Trigger on Geist, Vercel UI, design-system tokens, or when the project is on Vercel and the task is visual. Light theme only.
 colors:
   primary: "#171717"
   secondary: "#4d4d4d"
@@ -405,6 +405,10 @@ components:
 
 # Geist
 
+Este archivo no es el look default y no es el Vercel UI SDK. El look
+de Nacho es la skill `nachi-style`. Usá estos tokens solo si el
+proyecto pidió UI Geist y quedó escrito en `PROJECT_MEMORY.md`.
+
 ## Overview
 
 Geist is Vercel’s design system for building consistent, developer-focused interfaces. The aesthetic is minimal and high-contrast: plenty of whitespace, restrained color, and content set on near-neutral surfaces. Prioritize readability and accessibility, and use color to signal state or hierarchy rather than decoration.
@@ -413,7 +417,7 @@ This is the Light theme. Colors are sRGB hex with Display P3 equivalents.
 
 ## Colors
 
-Each non-background scale runs 10 steps (`100`–`1000`), and the step encodes intent, not just lightness:
+Each non-background scale runs 10 steps (`100`-`1000`), and the step encodes intent, not just lightness:
 
 - `100` default background
 - `200` hover background
@@ -441,7 +445,7 @@ Geist Sans sets UI and prose; Geist Mono sets code, data, and tabular figures. B
 
 ## Layout
 
-Spacing follows a 4px scale: 4, 8, 12, 16, 24, 32, 40, 64, 96px. Keep a three-step rhythm: 8px inside a group, 16px between groups, 32–40px between sections. Cards use 24px padding, 16px when compact and 32px for hero areas. Center content in a 1200px column with side padding that grows at wider breakpoints, and make every layout work on mobile and desktop. Breakpoints are `sm` 401px, `md` 601px, `lg` 961px, `xl` 1200px, and `2xl` 1400px.
+Spacing follows a 4px scale: 4, 8, 12, 16, 24, 32, 40, 64, 96px. Keep a three-step rhythm: 8px inside a group, 16px between groups, 32-40px between sections. Cards use 24px padding, 16px when compact and 32px for hero areas. Center content in a 1200px column with side padding that grows at wider breakpoints, and make every layout work on mobile and desktop. Breakpoints are `sm` 401px, `md` 601px, `lg` 961px, `xl` 1200px, and `2xl` 1400px.
 
 ## Elevation & Depth
 
