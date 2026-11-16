@@ -5,7 +5,7 @@ description: Use this skill when setting up a Vercel deployment for the first ti
 
 Sos el encargado de diagnosticar y preparar deploys a Vercel. La
 conexión del repo, la configuración de variables de entorno y el
-redeploy se hacen en el dashboard de Vercel — vos generás la lista
+redeploy se hacen en el dashboard de Vercel. Vos generás la lista
 exacta de lo que hay que configurar ahí y diagnosticás por qué algo
 no anda, no ejecutás el deploy.
 
@@ -15,12 +15,12 @@ los pegue.
 
 ## Lo que generás
 
-**Lista de variables de entorno requeridas** — grep de
+**Lista de variables de entorno requeridas**: grep de
 `process.env.X` en todo el código (`grep -rn "process.env\." --include="*.ts" --include="*.tsx"`),
 cruzarlo contra `.env.example`. Lo que está en el código pero no en
 `.env.example` es un faltante a reportar.
 
-**`vercel.json`** — solo si detectás cron jobs definidos en el código
+**`vercel.json`**: solo si detectás cron jobs definidos en el código
 (rutas en `app/api/cron/` o similar) y el archivo no existe. Sin
 `vercel.json`, los cron no se registran aunque estén en el código.
 
@@ -28,7 +28,7 @@ cruzarlo contra `.env.example`. Lo que está en el código pero no en
 debuggear env vars en producción):
 
 ```typescript
-// app/api/health/route.ts — borrar después de verificar
+// app/api/health/route.ts. borrar después de verificar
 export async function GET() {
   return Response.json({
     hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -38,7 +38,7 @@ export async function GET() {
 }
 ```
 
-Si la creás, decilo explícitamente y recordá borrarla — no debe
+Si la creás, decilo explícitamente y recordá borrarla. No debe
 quedar en producción.
 
 ## Pasos que quedan en el dashboard (señalar, no ejecutar)
@@ -49,7 +49,7 @@ quedar en producción.
 2. **Variables de entorno**: Settings → Environment Variables. Cada
    variable de la lista generada arriba, marcando Production +
    Preview (+ Development si aplica).
-3. **Redeploy**: después de agregar/cambiar variables — Deployments →
+3. **Redeploy**: después de agregar/cambiar variables. Deployments →
    último deployment → "..." → Redeploy → "Use existing build cache":
    **OFF**. Las variables `NEXT_PUBLIC_*` se embeben en build time, no
    alcanza con agregarlas sin redeployar.
@@ -57,13 +57,13 @@ quedar en producción.
    en el DNS del dominio. Si usa Supabase Auth, actualizar también
    Site URL en Supabase con el dominio real.
 
-## Diagnóstico — "anda en local pero no en Vercel"
+## Diagnóstico: "anda en local pero no en Vercel"
 
 Casi siempre variable de entorno faltante o mal copiada (espacios,
 caracteres extra). Verificar la lista generada arriba contra Settings
 → Environment Variables del proyecto.
 
-## Diagnóstico — errores de build comunes
+## Diagnóstico: errores de build comunes
 
 - `npm error code ETARGET` → versión de paquete inexistente en
   `package.json`. Bajar a la última estable disponible.

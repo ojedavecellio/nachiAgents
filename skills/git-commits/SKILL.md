@@ -1,11 +1,11 @@
 ---
 name: git-commits
-description: Use this skill whenever writing a git commit message — after staging changes that are ready to commit, when the user says "cyp", "hacé el commit", "armá el mensaje de commit", "committeá esto", or right before running git commit. Covers Conventional Commits format, scope naming for this stack, splitting into atomic commits, and what should never appear in a commit message. `cyp` means commit AND push.
+description: Use this skill whenever writing a git commit message. After staging changes that are ready to commit, when the user says "cyp", "hacé el commit", "armá el mensaje de commit", "committeá esto", or right before running git commit. Covers Conventional Commits format, scope naming for this stack, splitting into atomic commits, and what should never appear in a commit message. `cyp` means commit AND push.
 ---
 
 # Mensajes de commit
 
-Conventional Commits, en inglés — el código y los nombres de archivo ya
+Conventional Commits, en inglés. El código y los nombres de archivo ya
 están en inglés, el mensaje sigue la misma convención.
 
 ## `cyp`
@@ -26,30 +26,30 @@ que pida el push aparte.
 
 ## Types
 
-- `feat` — feature nueva o cambio de comportamiento visible
-- `fix` — corrección de un bug
-- `refactor` — cambio de estructura sin cambiar comportamiento
-- `perf` — mejora de performance
-- `style` — cambios puramente visuales/CSS sin lógica
-- `docs` — documentación (README, comentarios, AGENTS.md, etc.)
-- `chore` — config, dependencias, scripts, CI
-- `test` — agregar o ajustar tests
+- `feat`: feature nueva o cambio de comportamiento visible
+- `fix`: corrección de un bug
+- `refactor`: cambio de estructura sin cambiar comportamiento
+- `perf`: mejora de performance
+- `style`: cambios puramente visuales/CSS sin lógica
+- `docs`: documentación (README, comentarios, AGENTS.md, etc.)
+- `chore`: config, dependencias, scripts, CI
+- `test`: agregar o ajustar tests
 
 ## Scope
 
-Módulo/dominio afectado, kebab-case, entre paréntesis — `(hero)`,
+Módulo/dominio afectado, kebab-case, entre paréntesis. `(hero)`,
 `(auth)`, `(gallery)`, `(ctd-export)`. Si el cambio es transversal
 (config global, dependencias en todo el proyecto), omitir el scope.
 
 ## Description
 
 Imperativo, minúscula, sin punto final, máximo ~72 caracteres.
-"add", "fix", "remove" — no "added"/"fixes"/"removing".
+"add", "fix", "remove". No "added"/"fixes"/"removing".
 
 ## Body
 
 Solo si el "por qué" no es obvio desde el diff. El diff ya muestra el
-"qué" — el body explica motivación o contexto, no repite los cambios
+"qué". El body explica motivación o contexto, no repite los cambios
 línea por línea. Si la descripción del header alcanza, no hay body.
 
 ## Atomicidad
@@ -64,7 +64,7 @@ cambios quedaron mezclados en los mismos archivos.
 - Sin "Generated with Claude Code" ni co-author footers, salvo pedido
   explícito.
 - Sin commits tipo "fix", "wip", "cambios varios", "update" sin más
-  contexto — si no se puede describir en una línea qué cambió y por
+  contexto. Si no se puede describir en una línea qué cambió y por
   qué, probablemente sean dos commits.
 - `BREAKING CHANGE:` en el footer solo si rompe algo de lo que otro
   código (o vos mismo en otro proyecto) depende.

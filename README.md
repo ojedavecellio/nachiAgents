@@ -1,186 +1,166 @@
 # nachiAgents
 
-Configuration for Cursor Agent. Skills, playbooks, and a base `AGENTS.md`
-template — installable in any project via `npx`.
+Configuración para Cursor. Skills, playbooks y un `AGENTS.md` base.
+Se instala en cualquier proyecto con `npx`.
 
 ```bash
 npx github:ojedavecellio/nachiAgents
 ```
 
----
+Cursor ejecuta. Lee la skill que corresponde y hace el trabajo.
 
-## What it does
+## v2
 
-nachiAgents structures AI-assisted development through configuration files
-(`.md`, `.sh`, `.mdc`) that live in each project. Cursor loads `AGENTS.md`
-and `.cursor/rules/nachiagents.mdc` every session, and loads skills from
-`.cursor/skills/` on demand.
+- Look `nachi-style`: tokens oscuro/claro, tipo, una escala de radios
+  y sombras, vidrio permitido cuando es chrome.
+- shadcn/ui copiado al repo (`templates/components/`), tematizado.
+  No es el Vercel UI SDK.
+- `/slop` entra en `/ship` y en `deploy-checker`.
+- `/audit` comprime `PROJECT_MEMORY.md` (tope ~150 líneas, sección
+  "Reglas aprendidas").
+- `install.sh --update` refresca skills, commands, `AGENTS.md` y
+  templates sin tocar `PROJECT_MEMORY.md`.
+- Si `AGENTS.md` es solo el bloque que escribe Next, el kit se instala
+  y ese bloque queda entre sus markers.
+- `.cursor/` se versiona. `* 2.*` entra al `.gitignore`.
+- Gotchas de Next 16: GSAP y LCP, `next/font`, `connection()` /
+  Cache Components.
 
-The core principle: **Cursor executes.** Read the matching skill and do
-the work. No prompt-to-paste ritual.
+### Actualizar un repo que ya tiene el kit
 
----
+Desde el proyecto:
 
-## Repo structure
+```bash
+npx github:ojedavecellio/nachiAgents --update
+```
+
+O, con el repo del kit clonado:
+
+```bash
+./install.sh /ruta/al/proyecto --update
+./install.sh /ruta/al/proyecto mobile --update
+```
+
+No pisa `PROJECT_MEMORY.md`. Refresca `AGENTS.md` y conserva el bloque
+`<!-- BEGIN:nextjs-agent-rules -->` (o el legacy `NEXT-AGENTS-MD`) si
+Next lo había escrito. Los componentes del kit se vuelven a copiar.
+La ruta `app/api/og` solo se copia si no existe.
+
+Si quedó un `CLAUDE.md` del kit viejo, borrarlo. Cursor lee `AGENTS.md`.
+
+## Estructura
 
 ```
 nachiAgents/
-├── AGENTS.md                     ← always-on context (web variant)
-├── install.sh                    ← copies everything to .cursor/ in the target
+├── AGENTS.md
+├── install.sh
 ├── templates/
-│   ├── PROJECT_MEMORY.md         ← live project memory
-│   ├── AGENTS-mobile.md          ← Expo / React Native variant
-│   ├── AGENTS-automation.md      ← Python / FastAPI variant
-│   └── cursor-rules/
-│       └── nachiagents.mdc       ← skill map (alwaysApply: true)
-├── agents/                       ← playbooks (installed as .cursor/skills/<name>/SKILL.md)
-├── skills/                       ← playbooks loaded on demand
-├── commands/                     ← /audit, /ship, /memory, /og (installed as skills)
-└── .cursor/skills/               ← design skills (emil-design-eng, taste-skill)
+│   ├── PROJECT_MEMORY.md
+│   ├── AGENTS-mobile.md
+│   ├── AGENTS-automation.md
+│   ├── components.json
+│   ├── components/          ← Button, Card, Input, Dialog, Reveal, ...
+│   ├── hooks/
+│   ├── lib/                 ← utils, site-metadata, og
+│   ├── styles/nachi.css
+│   └── cursor-rules/nachiagents.mdc
+├── agents/
+├── skills/                  ← nachi-style, glass-patterns, ...
+├── commands/                ← /audit, /ship, /memory, /og, /slop
+└── .cursor/skills/          ← emil-design-eng, taste-skill
 ```
 
----
+## Archivos base
 
-## Core files
+`AGENTS.md` es el contexto que Cursor carga solo. Stack fijo (Next.js
+16, React 19, TypeScript, Tailwind v4, GSAP con `useGSAP`, Supabase,
+Resend, Vercel, shadcn/ui), nachi-style, prohibiciones, flujo de
+trabajo y gotchas de Next 16.
 
-### `AGENTS.md`
+Variantes: `web` (default), `mobile` (Expo/RN), `automation`
+(Python/FastAPI). El modelo default es el Grok más nuevo.
 
-Always-on context Cursor loads without being asked. Stack conventions
-(TypeScript strict, React 19, Tailwind v4, Supabase, Vercel), animation
-choices, design dispatch, testing policy. Cursor is the only agent —
-it executes. Not `CLAUDE.md` (that's Claude Code).
+`PROJECT_MEMORY.md` es el estado vivo del proyecto. Bullets, ~150
+líneas, con "Reglas aprendidas".
 
-Three variants: `web` (default), `mobile` (Expo/RN), `automation`
-(Python/FastAPI). `PROJECT_MEMORY.md` is the live project state —
-the agent reads it at the start of each session.
+`templates/cursor-rules/nachiagents.mdc` es el mapa (`alwaysApply`).
+Apunta a `.cursor/skills/`.
 
-### `templates/PROJECT_MEMORY.md`
+## Playbooks
 
-Live, project-specific memory: current state, architecture decisions,
-pending tasks, known gotchas. Copied to each project root and updated as
-the project evolves.
+`install.sh` copia `agents/*.md` a `.cursor/skills/<nombre>/SKILL.md`.
 
-### `templates/cursor-rules/nachiagents.mdc`
-
-Context map (`alwaysApply: true`). Points to skills in `.cursor/skills/`
-with per-resource triggers so Cursor loads them on demand. Also enforces
-the resource announcement pattern: before executing any task, announce
-which skill will be used.
-
----
-
-## Playbooks (installed as skills)
-
-Source lives in `agents/`. `install.sh` copies each file to
-`.cursor/skills/<name>/SKILL.md`.
-
-| Skill | When to use |
-|---|---|
-| `project-auditor` | General project audit, state of the app |
-| `deploy-checker` | Pre-deploy verification, before merging to main |
-| `supabase-setup` | Schema, RLS, migrations |
-| `vercel-deploy` | Env vars, Vercel build errors |
-| `performance-auditor` | Lighthouse, Speed Index, WebGL/canvas performance |
-| `product-discovery` | Structure a raw idea into vision, persona, JTBD, falsifiable hypotheses |
-| `feature-spec` | Turn a validated idea into a lightweight PRD |
-
----
+| Skill | Cuándo |
+| --- | --- |
+| `project-auditor` | Auditoría general |
+| `deploy-checker` | Antes de deployar. Incluye `/slop` |
+| `supabase-setup` | Schema, RLS, migraciones |
+| `vercel-deploy` | Env vars, errores de build |
+| `performance-auditor` | Lighthouse, LCP, motion pesado |
+| `product-discovery` | Idea cruda a hipótesis |
+| `feature-spec` | Idea validada a PRD liviano |
 
 ## Skills
 
-Playbooks in `skills/`, copied to `.cursor/skills/`. Cursor loads the
-matching `SKILL.md` when the task matches the trigger.
-
 | Skill | Trigger |
-|---|---|
-| `glass-patterns/` | Glassmorphism CSS, Liquid Glass |
-| `security-review/` | RLS, zod, pagination, security headers |
-| `git-commits/` | Conventional Commits format |
-| `hallmark/` | Visual redesign, 4-axis anti-AI-slop checklist |
-| `nextjs-audit/` | Next.js security and scalability audit |
-| `vercel-ui/` | Geist design system tokens |
-| `lean-experiments/` | Design the cheapest experiment that can falsify a product hypothesis |
-| `rapid-prototype/` | Disposable HTML prototype of a screen/flow before building it for real |
-| `og-images/` | Open Graph / social cards: design, `next/og`, render the PNG, iterate |
+| --- | --- |
+| `nachi-style/` | Look default. Reemplaza a hallmark |
+| `glass-patterns/` | Receta de vidrio y `useGSAP` |
+| `security-review/` | RLS, zod, headers |
+| `git-commits/` | Conventional Commits. `cyp` |
+| `nextjs-audit/` | Audit Next + Supabase, lo despacha `/audit` |
+| `vercel-ui/` | Tokens Geist, solo si el proyecto lo pidió |
+| `lean-experiments/` | El experimento más barato |
+| `rapid-prototype/` | HTML desechable |
+| `og-images/` | Open Graph |
 
-No se copian recetas locales de GSAP ni de Three.js — se pudren.
+GSAP y Next oficiales se instalan en proyectos web y se actualizan
+con `npx skills update`:
 
-**Oficiales** (el `install.sh` las agrega en proyectos web; se actualizan con `npx skills update`):
+- [greensock/gsap-skills](https://github.com/greensock/gsap-skills)
+- [vercel/next.js](https://github.com/vercel/next.js/tree/canary/skills)
 
-- [greensock/gsap-skills](https://github.com/greensock/gsap-skills) — `gsap-react`, `gsap-scrolltrigger`, `gsap-timeline`, …
-- [vercel/next.js](https://github.com/vercel/next.js/tree/canary/skills) — Cache Components, prefetch, dev-loop
+Three.js / R3F: sin receta local. Docs actuales. V9 estable, v10 alpha.
 
-Three.js / R3F: no hay skill oficial que valga. Sin receta local; docs actuales. v9 estable, v10 alpha.
+Impeccable va aparte: `npx impeccable install`.
 
-Optional: official Hallmark (`npx skills add nutlope/hallmark`) is
-separate — this repo ships the 4-axis checklist.
+## Commands
 
-### Design skills
+- `/audit`: auditor + `nextjs-audit` si es Next. Comprime la memoria.
+- `/ship`: `deploy-checker`, `/slop`, y `vercel-deploy` si hace falta.
+- `/memory`: resume la memoria y propone una sola cosa.
+- `/og`: diseña o itera la social card.
+- `/slop`: grepea la lista de prohibiciones. No arregla solo.
 
-Una skill de look por tarea, no las cuatro juntas. Viven en
-`.cursor/skills/`.
-
-| Skill | Trigger |
-|---|---|
-| `hallmark/` | Punch list anti-slop en una página que ya existe |
-| `taste-skill/` | Landing / portfolio / redesign greenfield (dials) |
-| `vercel-ui/` | UI de producto Geist / Vercel |
-| `emil-design-eng/` | Motion de un componente |
-| Impeccable | Pase de polish (`/polish`, `/critique`, `/bolder`...) — aparte: `npx impeccable install` |
-
-### Product & prototyping
-
-Work that starts before any product code: `product-discovery` (structure
-the idea, flag the biggest unvalidated risk) → `lean-experiments` (cheapest
-test for that risk) → `feature-spec` (lightweight PRD) → optionally
-`rapid-prototype` (disposable HTML). No product code until there is a spec.
-
----
-
-## Commands (installed as skills)
-
-- `/audit` — `project-auditor`; si el proyecto es Next, también `nextjs-audit`. Actualiza `PROJECT_MEMORY.md`
-- `/ship` — runs `deploy-checker` (+ `vercel-deploy` if needed), summarizes in three lists, asks before auto-fixing. Large React changes: `npx react-doctor@latest`
-- `/memory` — reads `PROJECT_MEMORY.md`, summarizes current state and pending tasks by impact, suggests what to tackle next
-- `/og` — designs or iterates the project's Open Graph / social card (`og-images` skill)
-
----
-
-## Installation
+## Instalación
 
 ```bash
-./install.sh /path/to/project              # web variant (default)
-./install.sh /path/to/project mobile       # Expo / React Native
-./install.sh /path/to/project automation   # Python / FastAPI
+./install.sh /ruta/al/proyecto
+./install.sh /ruta/al/proyecto mobile
+./install.sh /ruta/al/proyecto automation
+./install.sh /ruta/al/proyecto --update
 ```
 
-Copies playbooks to `.cursor/skills/` and the context map to
-`.cursor/rules/`. On the **web** variant, also installs official
-GSAP + Next skills (`npx skills add`). Copies `AGENTS.md` and
-`PROJECT_MEMORY.md` only if they don't already exist. If the target
-still has `CLAUDE.md` and no `AGENTS.md`, it gets renamed. Does not
-gitignore `.cursor/` — skills travel with the repo.
+Copia skills a `.cursor/skills/` y la rule a `.cursor/rules/`. En
+`web`, también los primitivos shadcn, `styles/nachi.css`, `components.json`,
+y (si hay `package.json` con Next y el target no es este repo) las
+deps: Radix dialog/slot, `clsx`, `tailwind-merge`, `cva`, `gsap`,
+`@gsap/react`, `lenis`.
 
----
+`AGENTS.md` se copia si no existe, si es solo el bloque de Next, o
+si pasás `--update`. `PROJECT_MEMORY.md` solo si no existe.
 
-## Design decisions
+`.cursor/` no va al gitignore. Sí va `* 2.*` (duplicados de Finder).
 
-**Deliberate rejections:**
+## Decisiones
 
-- **gstack / VoltAgent** — covered by `project-auditor` + `deploy-checker` for this stack. Style conflicts with the rest of the repo.
-- **Agent Teams / Conductor** — parallel execution doesn't match the step-by-step confirmation workflow.
-- **Global skills in `~/.cursor/skills/`** — project-level skills are sufficient; global scope adds unnecessary complexity.
-
----
+- gstack / VoltAgent: lo cubren `project-auditor` y `deploy-checker`.
+- Agent Teams / Conductor: no encaja con confirmar antes de producción.
+- Skills globales en `~/.cursor/skills/`: alcanza con las del proyecto.
+- Vercel UI SDK: fuera de scope.
+- Hallmark oficial: no se clona. El criterio vive en `nachi-style`.
 
 ## Stack
 
-Built for: Next.js 16 · Supabase · Vercel · TypeScript · React 19 · Tailwind v4
-Mobile variant: Expo SDK 57 · React Native 0.86
-
----
-
-## Inspiration
-
-- [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
-- [hesreallyhim/a-list-of-claude-code-agents](https://github.com/hesreallyhim/a-list-of-claude-code-agents)
+Next.js 16, Supabase, Resend, Vercel, TypeScript, React 19, Tailwind v4.
+Mobile: Expo SDK 57, React Native 0.86.
