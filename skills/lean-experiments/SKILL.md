@@ -3,19 +3,19 @@ name: lean-experiments
 description: Use this skill para diseñar el experimento más barato posible que pueda refutar una hipótesis de producto, antes de construir nada. Trigger cuando `product-discovery` señala un riesgo sin validar, cuando Nacho dice "cómo valido esto sin construirlo", "necesito saber si esto vale la pena antes de meterle tiempo", o cuando hay que priorizar qué asunción testear primero entre varias.
 ---
 
-# Lean experiments — validar antes de construir
+# Lean experiments: validar antes de construir
 
 Playbook para diseñar el experimento más barato que puede matar una
 idea mala rápido, en vez de construir el producto completo para
 descubrir que nadie lo quiere. Complementa a `product-discovery`
-(que identifica las hipótesis) — esta skill decide cómo testearlas.
+(que identifica las hipótesis). Esta skill decide cómo testearlas.
 
 ## Principio
 
 El costo de estar equivocado sobre una hipótesis debería ser mucho
 menor que el costo de construir la feature completa. Si el
 experimento cuesta casi lo mismo que construir la cosa real, no es un
-experimento — es solo construir despacio.
+experimento. Es solo construir despacio.
 
 ## Priorizar qué testear primero: matriz Impacto × Riesgo
 
@@ -32,7 +32,7 @@ Antes de diseñar el experimento, ordenar las hipótesis:
 
 ### 1. Entrevistas tipo Mom Test
 Antes de cualquier experimento con código: hablar con 3-5 personas del
-perfil objetivo. Reglas del Mom Test — evitar que confirmen por
+perfil objetivo. Reglas del Mom Test. Evitar que confirmen por
 cortesía:
 
 - Preguntar sobre su vida y comportamiento pasado, no sobre la idea.
@@ -41,7 +41,7 @@ cortesía:
 - Cualquier pregunta que se pueda responder con un cumplido en vez de
   un hecho, está mal formulada.
 - Buscar compromisos reales (tiempo, dinero, intro a otra persona), no
-  "me encantaría" — eso no cuesta nada decirlo.
+  "me encantaría". Eso no cuesta nada decirlo.
 
 ### 2. Landing page / explainer
 Una página que describe el producto terminado (aunque no exista) con
@@ -61,7 +61,7 @@ resultado tiene valor antes de invertir en automatizarlo.
 
 ### 5. Prototipo real pero acotado
 Cuando ninguno de los anteriores alcanza porque la hipótesis es sobre
-la experiencia de uso en sí (no sobre si la gente la quiere) — ver
+la experiencia de uso en sí (no sobre si la gente la quiere). Ver
 skill `rapid-prototype` para esto, es el escalón antes de construir
 la versión de producción.
 
@@ -69,19 +69,19 @@ la versión de producción.
 
 Para cada hipótesis a testear, definir antes de arrancar:
 
-1. **Qué vas a medir** — un número o comportamiento concreto, no una
+1. **Qué vas a medir**. Un número o comportamiento concreto, no una
    sensación ("3 de 5 personas se anotan en la waitlist", no "la
    gente parece interesada").
-2. **Umbral de éxito y de fracaso** — antes de correr el experimento,
+2. **Umbral de éxito y de fracaso**. Antes de correr el experimento,
    no después. Si no definiste el umbral de fracaso, cualquier
    resultado se puede racionalizar como éxito.
-3. **Tiempo/costo máximo** — cuánto tiempo o plata estás dispuesto a
+3. **Tiempo/costo máximo**. Cuánto tiempo o plata estás dispuesto a
    gastar en el experimento antes de cortarlo, corra bien o mal.
 
 ## Qué NO hacer
 
-- No diseñar un experimento para una hipótesis de bajo impacto — es
+- No diseñar un experimento para una hipótesis de bajo impacto. Es
   desperdiciar tiempo en algo que no cambia la decisión.
 - No arrancar el experimento sin el umbral de fracaso definido.
-- No confundir "la gente dijo que le gustaba" con validación — buscar
+- No confundir "la gente dijo que le gustaba" con validación. Buscar
   siempre el compromiso real (tiempo, plata, intro) sobre la opinión.

@@ -1,12 +1,12 @@
 ---
 name: project-auditor
-description: Use this skill at the start of any work on an existing project when the codebase hasn't been explored yet in this session, or whenever the user asks for an audit, a status report, "cómo está este proyecto", "tengo un bug en X", "quiero agregar esta feature", "revisá este código", or "cómo lo encaramos". Use PROACTIVELY before proposing architecture changes, new features, fixes, or stack decisions on a codebase that hasn't been audited yet — never propose solutions based on assumptions about the stack or structure.
+description: Use this skill at the start of any work on an existing project when the codebase hasn't been explored yet in this session, or whenever the user asks for an audit, a status report, "cómo está este proyecto", "tengo un bug en X", "quiero agregar esta feature", "revisá este código", or "cómo lo encaramos". Use PROACTIVELY before proposing architecture changes, new features, fixes, or stack decisions on a codebase that hasn't been audited yet. Never propose solutions based on assumptions about the stack or structure.
 ---
 
 Sos un auditor técnico. Tu trabajo es generar un status real y
 verificado del proyecto explorando el código directamente, no
 inferido ni asumido. Sé específico, técnico, y respondé en español.
-Sin relleno — solo lo que está en el código.
+Sin relleno. Solo lo que está en el código.
 
 ## Restricciones
 
@@ -20,24 +20,26 @@ verificación manual" en vez de ejecutarlo.
 ## Memoria del proyecto
 
 Si existe `PROJECT_MEMORY.md` en la raíz, leerlo primero. Es el
-contexto que el proyecto ya tiene documentado — no hace falta
+contexto que el proyecto ya tiene documentado. No hace falta
 redescubrirlo. Concentrate en verificar que sigue siendo cierto y en
 lo que cambió desde la última actualización. Si encontrás
 diferencias entre `PROJECT_MEMORY.md` y el código real (algo que dice
 "pendiente" y ya está hecho, una decisión que cambió, un gotcha que
 ya no aplica), agregar una sección final "Desactualizado en
-PROJECT_MEMORY.md" con esos puntos — no lo corrijas vos, solo
+PROJECT_MEMORY.md" con esos puntos. No lo corrijas vos, solo
 señalalo.
 
 ## Qué reportar
 
 ### Stack
 Lenguajes, frameworks y librerías principales con versiones relevantes
-(Node, React, Next, Python, etc — leer `package.json` / `requirements.txt`).
+(Node, React, Next, Python, etc. leer `package.json` / `requirements.txt`).
 Servicios externos que consume (auth, DB, storage, pagos, IA). Cómo se
 buildea y deployea (scripts en `package.json`, `vercel.json`, CI si hay).
 Si es Next 16+: `proxy.ts` vs `middleware.ts` deprecado; script `lint`
-no puede ser `next lint` (el comando ya no existe).
+no puede ser `next lint` (el comando ya no existe). Anotá también si
+el hero arranca en `opacity: 0`, si la fuente no viene de `next/font`,
+y si `cookies()` o `headers()` se leen sin `connection()`.
 
 ### Estructura
 Organización de carpetas y módulos. Patrón arquitectónico (feature-based,
@@ -60,7 +62,7 @@ APIs externas que consume. Webhooks, crons, workers (buscar
 
 ### Estado actual
 Qué parte del proyecto está más desarrollada. Qué está incompleto, roto
-o pendiente — buscar `TODO`, `FIXME`, código comentado sospechoso,
+o pendiente. Buscar `TODO`, `FIXME`, código comentado sospechoso,
 rutas de debug. Deuda técnica visible.
 
 ### Decisiones no obvias
@@ -73,14 +75,14 @@ ADRs, `AGENTS.md` o `README.md` existentes en el proyecto).
 El `AGENTS.md` raíz define las convenciones base (TypeScript strict,
 RLS activado, sin Redux, sin ORM por defecto, Supabase Auth, etc).
 Si algo del proyecto contradice esas convenciones, señalalo en una
-sección aparte llamada "Contradice convenciones" — sin proponer
+sección aparte llamada "Contradice convenciones". Sin proponer
 todavía cómo arreglarlo, solo señalarlo.
 
 ## Formato de salida
 
 Markdown con los headers de arriba, en ese orden. Si una sección no
 aplica (ej. "Integraciones" en un proyecto sin APIs externas), poner
-"N/A" y seguir — no inflar con relleno para llenar la sección.
+"N/A" y seguir. No inflar con relleno para llenar la sección.
 
 ## Leftovers
 

@@ -1,4 +1,4 @@
-# OG images — templates
+# OG images: templates
 
 Satori details: [satori](https://github.com/vercel/satori). Vercel:
 [OG Image Generation](https://vercel.com/docs/og-image-generation).
@@ -87,7 +87,7 @@ async function loadGoogleFont(family: string, text: string) {
 ```
 
 Formatos: `ttf`, `otf`, `woff`. Preferir `ttf`/`otf`. No `woff2`.
-`next/font` **no** funciona dentro de `ImageResponse` — hay que
+`next/font` **no** funciona dentro de `ImageResponse`. Hay que
 pasar `ArrayBuffer` en `fonts`.
 
 ## Metadata
@@ -131,12 +131,12 @@ Allow: /api/og
 Si `robots.txt` se genera en Next (`app/robots.ts`), incluir esa
 regla ahí.
 
-## Satori — lo que no va
+## Satori: lo que no va
 
 - `display: grid`, `gap` inconsistente, selectores CSS, media queries
 - Web fonts por `link` / `next/font` (solo `fonts` en options)
 - Bundle de la ruta > 500KB (JSX + CSS + fonts + imágenes). Si se
-  pasa, subset de font o fetch de assets en runtime — no embeber
+  pasa, subset de font o fetch de assets en runtime. No embeber
   fotos enormes.
 
 ## Preview

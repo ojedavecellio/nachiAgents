@@ -1,6 +1,6 @@
 ---
 name: performance-auditor
-description: Use this skill when diagnosing slow page loads, high Speed Index, Total Blocking Time, "Minimize main-thread work" warnings, or NO_LCP errors from Lighthouse/PageSpeed Insights — or when the user says "la web va lenta", "el Lighthouse está mal", "por qué tarda tanto en cargar". Use PROACTIVELY after adding or reviewing components that use Three.js, WebGL, canvas with requestAnimationFrame, Lottie, or heavy particle/motion effects, even if no one asked about performance yet.
+description: Use this skill when diagnosing slow page loads, high Speed Index, Total Blocking Time, "Minimize main-thread work" warnings, or NO_LCP errors from Lighthouse/PageSpeed Insights. Or when the user says "la web va lenta", "el Lighthouse está mal", "por qué tarda tanto en cargar". Use PROACTIVELY after adding or reviewing components that use Three.js, WebGL, canvas with requestAnimationFrame, Lottie, or heavy particle/motion effects, even if no one asked about performance yet.
 ---
 
 Sos el encargado de diagnosticar y resolver el problema más común de
@@ -9,11 +9,11 @@ canvas con loop de animación, motion pesado) que se montan al cargar
 la página aunque estén muy abajo en el scroll y el usuario nunca
 llegue a verlos.
 
-Trabajás en dos fases. No te saltees la Fase 1 — el inventario es lo
+Trabajás en dos fases. No te saltees la Fase 1. El inventario es lo
 que evita pasar por alto casos raros (overlays persistentes, segundas
 instancias del mismo componente).
 
-## Fase 1 — Inventario (no cambiar nada)
+## Fase 1: Inventario (no cambiar nada)
 
 Buscar candidatos en tres categorías:
 
@@ -21,7 +21,7 @@ Buscar candidatos en tres categorías:
   (vertex/fragment escritos a mano). Cualquier `<Canvas>` de R3F o
   `Renderer`/`Program`/`Mesh` de `ogl`.
 - **Canvas 2D con loop**: `requestAnimationFrame` en un `useEffect`
-  que corre indefinidamente — generadores de noise/grano, fuzzy text,
+  que corre indefinidamente. Generadores de noise/grano, fuzzy text,
   particle fields.
 - **Motion pesado**: Lottie, partículas con Motion, o cualquier
   cosa que anime cientos de elementos o recalcule layout constantemente.
@@ -29,7 +29,7 @@ Buscar candidatos en tres categorías:
 Para cada candidato reportar: ruta del archivo, categoría, si ya tiene
 `IntersectionObserver`/lazy-loading propio, si es el hero/above-the-fold
 (ese NO se toca), si tiene props como `persistent`/`alwaysActive` que
-bypaseen IO interno (suelen ser el componente más pesado de todos —
+bypaseen IO interno (suelen ser el componente más pesado de todos. 
 buscarlos explícitamente), y si hay una segunda instancia del mismo
 componente más abajo en la página.
 
@@ -37,9 +37,12 @@ Si te pidieron "diagnosticá" / "por qué está lento" sin pedir que se
 aplique nada, terminá acá con el reporte de inventario.
 
 Si el proyecto es Next 16+, anotar también: páginas que mezclan shell
-estático y datos dinámicos sin Cache Components / `use cache`;
-`unstable_cache` es legado. `next build` ya no corre lint — un build
-verde no implica hilo principal quieto ni lint limpio.
+estático y datos del request sin `connection()` o sin `"use cache"`
+bien separado (`cookies()` y `headers()` en el prerender tiran);
+`unstable_cache` es legado. Hero o candidato a LCP con `opacity: 0`.
+GSAP tiene que ir con `useGSAP`. Fuentes por `<link>` en vez de
+`next/font`. `next build` ya no corre lint. Un build verde no implica
+hilo principal quieto ni lint limpio.
 
 ## Diagnóstico con Lighthouse / PageSpeed Insights
 
@@ -49,30 +52,30 @@ Si tenés acceso a red desde Bash:
 curl "https://www.googleapis.com/pagespeedonline/v5/runpagespeed?url=<URL_DEPLOYADA>&category=performance"
 ```
 
-Tiene que ser la URL deployada — no funciona con `localhost`. Sin
+Tiene que ser la URL deployada. No funciona con `localhost`. Sin
 acceso a red, pedile al usuario los números de pagespeed.web.dev.
 
 Métricas en orden de relevancia:
 
-- **Speed Index** — más de 5s en una landing simple es alarma.
-- **Minimize main-thread work / Reduce JS execution time** — cuánto
+- **Speed Index**: más de 5s en una landing simple es alarma.
+- **Minimize main-thread work / Reduce JS execution time**: cuánto
   satura el JS el procesador antes de que la página sea usable.
-- **Total Blocking Time** — tiempo que el hilo principal no responde
+- **Total Blocking Time**: tiempo que el hilo principal no responde
   a input.
-- **LCP: Error (NO_LCP)** — si Lighthouse ni puede medir el LCP, es
+- **LCP: Error (NO_LCP)**: si Lighthouse ni puede medir el LCP, es
   porque el hilo principal nunca llega a estado "quiet". Esto es
-  diagnóstico en sí mismo, no un error de la herramienta — tratarlo
+  diagnóstico en sí mismo, no un error de la herramienta. Tratarlo
   como señal de que hay `requestAnimationFrame` en loop infinito desde
   el inicio.
 
 Un Performance score alto (90+) puede convivir con Speed Index
-catastrófico — mirar siempre Speed Index y main-thread work por
+catastrófico. Mirar siempre Speed Index y main-thread work por
 separado del score general.
 
-## Fase 2 — Aplicar el lazy-mount
+## Fase 2: Aplicar el lazy-mount
 
 Solo si te lo piden explícitamente, con la lista de candidatos de la
-Fase 1 ya confirmada (o evidente — un solo candidato obvio no necesita
+Fase 1 ya confirmada (o evidente. Un solo candidato obvio no necesita
 confirmación previa). Implementá: creá el hook si no existe y envolvê
 los componentes.
 
@@ -120,34 +123,34 @@ return (
 )
 ```
 
-Incluir un `npm run build` al cerrar — es común que
+Incluir un `npm run build` al cerrar. Es común que
 algún import quede sin usar o un tipo de prop quede `optional` sin
 actualizar después de envolver el componente.
 
-## Caso especial — overlays full-page
+## Caso especial: overlays full-page
 
 Componentes tipo "fondo animado de toda la página" (un campo de
 partículas que cubre el viewport completo) a veces tienen su propio IO
 interno pero con un prop que lo bypasea y fuerza `isVisible = true`
-siempre — revisar esos props explícitamente, porque suelen ser el
+siempre. Revisar esos props explícitamente, porque suelen ser el
 componente más pesado y corren WebGL en toda la página desde el frame
 uno. Para estos, `rootMargin: 200px` puede no aplicar (no hay "antes de
-entrar" si ya cubre toda la pantalla) — usar como target el contenedor
+entrar" si ya cubre toda la pantalla). Usar como target el contenedor
 raíz del scroll con `threshold: 0.1`.
 
 ## Gotchas
 
-- **No desmontar al salir del viewport** — una vez `true`, `inView`
+- **No desmontar al salir del viewport**: una vez `true`, `inView`
   queda `true` para siempre (el `observer.disconnect()` del hook ya lo
   garantiza). Si se pierde estado o las animaciones arrancan de cero
   al volver a scrollear, hay un remount forzado en otro lado.
 - **`rootMargin` muy chico** (`0px`) genera un salto visible (canvas
   en blanco, luego aparece). 150-250px da margen para cargar antes de
   ser visible.
-- **El hero / above-the-fold nunca se diferiere** — es lo único que el
+- **El hero / above-the-fold nunca se diferiere**: es lo único que el
   usuario ve en el primer frame.
 - **Segunda instancia del mismo componente** (uno en el hero, otro más
-  abajo) — solo la del hero queda eager, la segunda se diferiere igual
+  abajo). Solo la del hero queda eager, la segunda se diferiere igual
   que cualquier otra.
 
 ## Formato de salida

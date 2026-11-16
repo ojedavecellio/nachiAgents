@@ -10,19 +10,19 @@ sin relleno.
 
 ## Lo que podés ejecutar
 
-- `tsc --noEmit` (o `npx tsc --noEmit` — revisar `package.json` para
+- `tsc --noEmit` (o `npx tsc --noEmit`. Revisar `package.json` para
   el comando exacto)
 - `npm run build` (o el comando de build declarado en `package.json`)
-- `npm run lint` — ESLint CLI (`eslint .`). `next lint` fue removido
+- `npm run lint`. ESLint CLI (`eslint.`). `next lint` fue removido
   en Next 16: si el script sigue siendo `"lint": "next lint"`, es
   bloqueante (el comando no existe). Codemod:
   `npx @next/codemod@canary next-lint-to-eslint-cli .`.
   React 19/Next 16 tienen reglas de hooks más estrictas
   (`react-hooks/set-state-in-effect`, `react-hooks/purity`,
-  `react-hooks/refs`, etc.) que `tsc` y `next build` no bloquean —
+  `react-hooks/refs`, etc.) que `tsc` y `next build` no bloquean. 
   `next build` ya no corre lint
 - `git status`
-- `git log --all --full-history -- "*.env"` — detectar si algún
+- `git log --all --full-history -- "*.env"`. Detectar si algún
   `.env` quedó en el historial de git aunque ya no exista en `main`
 - `grep` para: `console.log` con strings que parezcan emails, tokens
   o IDs de usuario; patrones de API keys hardcodeadas (`sk-`, `eyJ`,
@@ -33,11 +33,11 @@ No instales dependencias nuevas, no corras `git push` ni `git commit`,
 no modifiques archivos salvo que el usuario lo pida explícitamente
 después de ver el reporte.
 
-## Checklist — Código
+## Checklist: Código
 
 - `tsc --noEmit` pasa sin errores
 - `npm run build` compila sin errores (no alcanza con que pase `tsc`)
-- `npm run lint` — clasificar los errores, no listarlos todos como
+- `npm run lint`. Clasificar los errores, no listarlos todos como
   iguales: errores de `react-hooks/*` (set-state-in-effect, purity,
   exhaustive-deps, refs) son antipatrones que pueden causar loops de
   render o comportamiento incorrecto → **Bloqueante**. Errores
@@ -53,7 +53,7 @@ después de ver el reporte.
   legado (deprecado) → migrar con
   `npx @next/codemod@canary middleware-to-proxy .`. No pueden coexistir.
 
-## Checklist — Supabase (si el proyecto lo usa)
+## Checklist: Supabase (si el proyecto lo usa)
 
 No tenés acceso al dashboard de Supabase. A menos que haya un MCP de
 Supabase conectado en esta sesión, reportá estos puntos como
@@ -65,18 +65,18 @@ Supabase conectado en esta sesión, reportá estos puntos como
 - Bucket de Storage con policies correctas
 - Backups automáticos activados (requiere plan pago)
 
-## Checklist — Vercel / deploy
+## Checklist: Vercel / deploy
 
 - Variables de entorno: listar todas las que el código usa
   (`process.env.X`) y confirmar que están en `.env.example`. Las que
   faltan son bloqueantes.
-- `robots: { index: false }` — verificar si está presente y si
+- `robots: { index: false }`. Verificar si está presente y si
   corresponde sacarlo (proyecto listo para indexar en Google) o
   mantenerlo (proyecto no listo para ser público)
-- `vercel.json` presente si hay cron jobs definidos en el código —
+- `vercel.json` presente si hay cron jobs definidos en el código. 
   sin el archivo, los cron no se registran aunque estén en el código
 
-## Checklist — OG / compartir
+## Checklist: OG / compartir
 
 Buscar `openGraph`, `og:image`, `ImageResponse`, `app/api/og`.
 
@@ -95,15 +95,28 @@ Buscar `openGraph`, `og:image`, `ImageResponse`, `app/api/og`.
 - **Verificar manualmente** post-deploy: Vercel → deployment → tab
   Open Graph.
 
+## Checklist: slop
+
+Corré el mismo pase que la skill `slop` (greps de em dash, en dash,
+`border-l` en cards, degradés violeta o celeste, texto con degradé,
+vidrio que no es chrome, `opacity: 0` en el hero, "Unlock / Elevate /
+Seamless / Effortless", emojis en headings, testimonios inventados).
+
+El vidrio bien hecho (nav, pastilla, overlay, barra flotante) no es
+hallazgo. Los hits van a **Verificar manualmente** si están en una
+página pública, o a **Nice to have** si no. No bloquean el build por
+sí solos. No los arregles en este pase.
+
 ## Formato de salida
 
 Tres listas:
 
-**Bloqueante** — no se puede lanzar sin resolver esto. Para cada
+**Bloqueante.** No se puede lanzar sin resolver esto. Para cada
 ítem, decir exactamente qué archivo, comando o output lo evidencia.
 
-**Verificar manualmente** — no se puede chequear desde el código pero
-es crítico (dashboards de Supabase/Vercel).
+**Verificar manualmente.** No se puede chequear desde el código pero
+es crítico (dashboards de Supabase/Vercel), o es slop en una página
+pública.
 
-**Nice to have** — no bloquea el lanzamiento pero conviene resolver
+**Nice to have.** No bloquea el lanzamiento pero conviene resolver
 antes.

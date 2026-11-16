@@ -1,4 +1,4 @@
-# Contexto base (automatización) — Nacho
+# Contexto base (automatización): Nacho
 
 Indie developer. Vibe coder:
 construyo con asistencia de AI. Prompts directos, sin relleno.
@@ -9,7 +9,7 @@ Python para procesamiento de datos, clasificación, automatización de
 tareas, o agentes. FastAPI solo si el output es una API consumida por
 un frontend Next.js, o si necesita UI propia consumible. Si el output
 es directamente una UI para usuarios finales, eso es un proyecto Next.js
-separado (`stack-web` / `AGENTS.md` web) — proyectos que combinan web +
+separado (`stack-web` / `AGENTS.md` web). Proyectos que combinan web +
 backend de procesamiento son DOS repos separados desde el inicio, no
 un monorepo.
 
@@ -24,14 +24,19 @@ python-dotenv     ← variables de entorno
 pytest            ← tests
 ```
 
-LLM: Anthropic SDK (`anthropic`) como primera opción,
-`claude-sonnet-4-6` como default. OpenAI SDK solo si el proyecto ya
-está integrado o hay una razón específica.
+LLM: el modelo default es el Grok más nuevo. No pines una versión
+fija, salvo que Nacho pida otra. OpenAI solo si el proyecto ya está
+integrado o hay una razón específica. La API key nunca va al cliente.
+
+Flujo: agente de Cursor en la Mac de Nacho, con el Grok más nuevo.
+`/no-test` salvo lógica sensible. Cambio chico a `main` después de
+lint. Cambio grande en branch, con PR y el ok de Nacho. Confirmar
+antes de tocar producción. `cyp` es commit y push.
 
 Integraciones comunes: Gmail (`google-auth`, `google-auth-oauthlib`,
 `google-api-python-client`), adapters MCP propios si aplica.
 
-## Arquitectura — capas + puertos/adaptadores, no MVC
+## Arquitectura: capas + puertos/adaptadores, no MVC
 
 ```
 proyecto/
@@ -51,7 +56,7 @@ proyecto/
   scripts/          ← mantenimiento/migración
 ```
 
-El dominio no importa de `infra/` — los adapters se inyectan en
+El dominio no importa de `infra/`. Los adapters se inyectan en
 runtime. Interfaces abstractas para todo lo externo (Gmail, LLM,
 storage), con al menos un adapter in-memory para tests.
 
@@ -66,14 +71,14 @@ def assert_live_mode():
         raise RuntimeError("Operación bloqueada en dry-run")
 ```
 
-**Fallback conservador en LLM** — si falla la llamada al modelo o
+**Fallback conservador en LLM**: si falla la llamada al modelo o
 falta la API key, el workflow clasifica como `Review` (o equivalente).
 No fallar silenciosamente con una clasificación incorrecta.
 
-**Logging de acciones en JSONL** — cada acción que muta estado se
+**Logging de acciones en JSONL**: cada acción que muta estado se
 loguea con timestamp, tipo de acción y metadata relevante. El schema
 de `actions.jsonl` tiene que estar definido ANTES de construir
-cualquier UI que lo consuma — si el schema cambia, la UI se rompe
+cualquier UI que lo consuma. Si el schema cambia, la UI se rompe
 silenciosamente. Es el bug más común en estos proyectos.
 
 **Estado mínimo en archivos locales** para proyectos personales/v1:
@@ -83,18 +88,18 @@ escala lo justifique.
 ## UI opcional
 
 NiceGUI para prototipo rápido (Python puro, sin build step) si hace
-falta un dashboard de observabilidad local — módulo separado (`web/`),
+falta un dashboard de observabilidad local. Módulo separado (`web/`),
 con estado independiente del backend, sin mezclar lógica de dominio
 con la UI. Next.js si la UI es para usuarios finales (proyecto
 separado).
 
 ## Variables de entorno
 
-`requirements.txt` con todas las dependencias — NiceGUI no está ahí
+`requirements.txt` con todas las dependencias. NiceGUI no está ahí
 por defecto en proyectos generados con AI, verificar antes de
 compartir o deployar. `.env.example` con todas las variables sin
 valores. `python-dotenv` cargado en el `__init__.py` del módulo
-principal — no sobreescribe variables ya definidas en el sistema (en
+principal. No sobreescribe variables ya definidas en el sistema (en
 producción/CI, las del entorno del sistema tienen precedencia).
 
 Nunca al repo: `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`,
@@ -104,9 +109,9 @@ Nunca al repo: `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`,
 ## Convenciones
 
 TypeScript strict no aplica acá, pero el equivalente sí: sin `dict`
-crudo como input de endpoints FastAPI — Pydantic tipado hace la
-validación automáticamente. Un archivo = una responsabilidad. pytest
-para lógica de dominio y workflows — los adapters in-memory existen
+crudo como input de endpoints FastAPI. Pydantic tipado hace la
+validación automáticamente. Un archivo = una responsabilidad. Pytest
+para lógica de dominio y workflows. Los adapters in-memory existen
 precisamente para poder testear sin dependencias externas. Sin
 comentarios obvios.
 
@@ -127,9 +132,9 @@ en otro lado.
 `PROJECT_MEMORY.md` es el estado vivo de este
 proyecto. Al arrancar cada sesión, leerlo primero. Prestar especial
 atención al schema de `actions.jsonl` y qué adapters están activos
-(memory vs real) — es lo más fácil de perder de vista entre sesiones.
+(memory vs real). Es lo más fácil de perder de vista entre sesiones.
 
-Si está vacío — antes de hacer cualquier otra cosa, preguntarle a Nacho:
+Si está vacío. Antes de hacer cualquier otra cosa, preguntarle a Nacho:
 > "PROJECT_MEMORY.md está vacío. Contame el problema que resuelve
 > esta automatización y qué está construido hasta ahora."
 
