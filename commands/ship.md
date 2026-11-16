@@ -8,18 +8,21 @@ checklist de pre-deploy completo contra el código real.
 
 Si el reporte tiene bloqueantes relacionados con variables de entorno
 faltantes, configuración de Vercel, o errores de build que necesiten
-diagnóstico — leé también `.cursor/skills/vercel-deploy/SKILL.md` para
+diagnóstico, leé también `.cursor/skills/vercel-deploy/SKILL.md` para
 generar la lista exacta de qué configurar y por qué.
+
+Leé y seguí `.cursor/skills/slop/SKILL.md` (o `commands/slop.md` en
+este repo). El pase de slop es un paso del ship, no un adorno.
 
 Al final:
 
 1. Mostrame las tres listas (Bloqueante / Verificar manualmente / Nice
-   to have).
+   to have) y, aparte, los hallazgos de `/slop`.
 2. Si hay bloqueantes que se pueden arreglar solos (lint, console.log
    con datos sensibles, `.env.example` incompleto), preguntame si
-   querés que los arregle antes de seguir — no los arregles sin
-   preguntar, a diferencia del audit esto puede tocar código que
-   estabas editando.
+   querés que los arregle antes de seguir. No los arregles sin
+   preguntar. A diferencia del audit, esto puede tocar código que
+   estabas editando. El slop tampoco se arregla solo.
 3. Si falta OG en un sitio público, o la card es el template default /
    slop: no la inventes en el ship. Señalalo y usá la skill
    `og-images` (o `/og`) cuando Nacho pida arreglarla.

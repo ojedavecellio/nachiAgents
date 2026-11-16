@@ -1,8 +1,8 @@
 {
   "name": "nachi-agents",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Skills, AGENTS.md y memoria de proyecto para Cursor — Nacho",
+  "description": "Skills, AGENTS.md y memoria de proyecto para Cursor. Nacho",
   "bin": {
     "nachi-agents": "./install.sh"
   }

@@ -10,7 +10,7 @@ description: >
   PROJECT_MEMORY.md).
 ---
 
-# Next.js + Supabase + Vercel — Full Stack Audit
+# Next.js + Supabase + Vercel: Full Stack Audit
 
 Comprehensive local-only audit for projects built on the Next.js + Supabase + Vercel stack. Analyzes code, migrations, RLS policies, route protection, performance patterns, and produces actionable findings with fixes.
 
@@ -21,7 +21,7 @@ Next.js. También se corre si Nacho pide un audit de seguridad/escala
 de un Next + Supabase.
 
 - El proyecto MUST ser Next.js. Verificar `next.config.*`. Supabase
-  es el caso típico (`supabase/` o keys en `.env*`) — si no hay
+  es el caso típico (`supabase/` o keys en `.env*`). Si no hay
   Supabase, saltar las fases de RLS/DB y seguir con security/perf.
 
 ## Scope
@@ -55,16 +55,16 @@ Understand the project before auditing. Gather:
 1. **Project structure:**
    - `app/` vs `pages/` router
    - API routes location (`app/api/` or `pages/api/`)
-   - `proxy.ts` (Next 16+). `middleware.ts` está deprecado — flaggearlo
+   - `proxy.ts` (Next 16+). `middleware.ts` está deprecado. Flaggearlo
      y recomendar `npx @next/codemod@canary middleware-to-proxy .`
    - Supabase client initialization (where/how)
    - Auth provider (Supabase Auth, NextAuth, custom)
 
 2. **Dependencies:**
-   - Read `package.json` — note versions of next, @supabase/supabase-js, @supabase/ssr, @supabase/auth-helpers-nextjs
+   - Read `package.json`. Note versions of next, @supabase/supabase-js, @supabase/ssr, @supabase/auth-helpers-nextjs
    - Check for deprecated packages (auth-helpers is deprecated in favor of @supabase/ssr)
    - `lint` script: if it is `next lint` on Next 16+, the command was
-     removed — flag and suggest `npx @next/codemod@canary next-lint-to-eslint-cli .`
+     removed. Flag and suggest `npx @next/codemod@canary next-lint-to-eslint-cli.`
 
 3. **Supabase setup:**
    - `supabase/` directory presence
@@ -74,12 +74,12 @@ Understand the project before auditing. Gather:
    - Edge functions in `supabase/functions/`
 
 4. **Environment variables:**
-   - `.env.local`, `.env`, `.env.example` — check what's declared
+   - `.env.local`, `.env`, `.env.example`. Check what's declared
    - Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` exist
    - Check for `SUPABASE_SERVICE_ROLE_KEY` usage (should NEVER be in client code)
 
 5. **Vercel config:**
-   - `vercel.json` — headers, redirects, rewrites, cron
+   - `vercel.json`. Headers, redirects, rewrites, cron
    - Environment variable naming conventions
 
 **Output:** Project profile summary used by all subsequent phases.
@@ -91,7 +91,7 @@ Understand the project before auditing. Gather:
 Read ALL migration files and check:
 
 - [ ] Every table has `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`
-- [ ] Every table has at least one policy (tables with RLS enabled but no policies = locked out completely OR accessible to service_role only — flag which)
+- [ ] Every table has at least one policy (tables with RLS enabled but no policies = locked out completely OR accessible to service_role only. Flag which)
 - [ ] Policies use `auth.uid()` correctly (not trusting client-supplied user_id)
 - [ ] SELECT policies don't leak data cross-tenant
 - [ ] INSERT policies validate ownership (e.g., `auth.uid() = user_id`)
@@ -104,19 +104,19 @@ Read ALL migration files and check:
 - Table with no RLS at all (CRITICAL)
 - Policy that uses `true` as check (allows everything)
 - Policy that checks `user_id` from the request body instead of `auth.uid()`
-- Missing policy for UPDATE/DELETE (defaults to deny — might be intentional, flag for review)
+- Missing policy for UPDATE/DELETE (defaults to deny. Might be intentional, flag for review)
 
 #### 2.2 Route Protection
 
 - [ ] `proxy.ts` exists and protects authenticated routes (Next 16+).
-      `middleware.ts` is deprecated — flag if still present
-- [ ] Check `proxy` matcher patterns — are admin routes covered?
+      `middleware.ts` is deprecated. Flag if still present
+- [ ] Check `proxy` matcher patterns. Are admin routes covered?
 - [ ] API routes (`app/api/`) validate session/token before processing
 - [ ] Server actions verify auth before mutations
 - [ ] No client-only auth checks (hiding UI is not security)
 
 **404 / Route Exposure:**
-- [ ] Dynamic routes validate params (e.g., `/users/[id]` — does it return 404 for non-existent IDs or leak data?)
+- [ ] Dynamic routes validate params (e.g., `/users/[id]`. Does it return 404 for non-existent IDs or leak data?)
 - [ ] Catch-all routes don't expose internal paths
 - [ ] API routes return proper 404 vs 401 vs 403 (don't leak existence via different status codes)
 
@@ -124,7 +124,7 @@ Read ALL migration files and check:
 
 - [ ] Admin routes are in a separate route group or have explicit proxy/middleware protection
 - [ ] Admin API endpoints check role/permission, not just "is authenticated"
-- [ ] Admin client pages don't just hide UI — server validates role
+- [ ] Admin client pages don't just hide UI. Server validates role
 - [ ] Supabase admin operations use `service_role` only from server-side (API routes, server actions, edge functions)
 
 #### 2.4 Email Security
@@ -142,7 +142,7 @@ If the project sends emails (check for Resend, SendGrid, nodemailer, Supabase Au
 - [ ] Supabase client is created correctly (separate browser/server clients)
 - [ ] Tokens are not stored in localStorage (should use Supabase's built-in cookie handling with @supabase/ssr)
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` never appears in client-side code or `NEXT_PUBLIC_*` vars
-- [ ] Session refresh on each request via `proxy.ts` (or leftover middleware) — prevents stale auth
+- [ ] Session refresh on each request via `proxy.ts` (or leftover middleware). Prevents stale auth
 - [ ] Sign-out properly clears session
 
 #### 2.6 Rate Limiting
@@ -164,7 +164,7 @@ Check if rate limiting is implemented on abuse-prone endpoints:
 
 **Common failures:**
 - No rate limiting anywhere (CRITICAL on auth endpoints)
-- Rate limiting only on client side (useless — attacker bypasses)
+- Rate limiting only on client side (useless. Attacker bypasses)
 - Rate limiting by user ID only (unauthenticated endpoints unprotected)
 - No rate limiting on expensive operations (AI/LLM calls, file processing)
 
@@ -185,7 +185,7 @@ Check if CAPTCHA or bot protection exists on public-facing forms:
 - Supabase Auth CAPTCHA integration (supports hCaptcha/Turnstile natively)
 
 **Common failures:**
-- CAPTCHA widget present but token never verified server-side (CRITICAL — decoration only)
+- CAPTCHA widget present but token never verified server-side (CRITICAL. Decoration only)
 - No bot protection on signup (mass account creation possible)
 - No bot protection on any form that sends emails (spam vector)
 - CAPTCHA secret key in client-side code (defeats the purpose)
@@ -197,7 +197,7 @@ Check if CAPTCHA or bot protection exists on public-facing forms:
 - [ ] No hardcoded API keys, passwords, or tokens in source code
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` only used in server-side code (API routes, server actions, edge functions)
 - [ ] Third-party API keys (OpenAI, Stripe, Resend, etc.) are NOT prefixed with `NEXT_PUBLIC_`
-- [ ] No secrets logged to console (even in dev mode — these leak in Vercel logs)
+- [ ] No secrets logged to console (even in dev mode. These leak in Vercel logs)
 - [ ] `.env.example` exists with placeholder values (not real keys)
 
 **How to detect:**
@@ -207,19 +207,19 @@ Check if CAPTCHA or bot protection exists on public-facing forms:
 - Check git history for accidentally committed `.env` files (flag for manual review)
 
 **Common failures:**
-- OpenAI/Anthropic key in `NEXT_PUBLIC_OPENAI_API_KEY` (CRITICAL — anyone can steal it from browser DevTools)
+- OpenAI/Anthropic key in `NEXT_PUBLIC_OPENAI_API_KEY` (CRITICAL. Anyone can steal it from browser DevTools)
 - Stripe secret key exposed client-side
 - Service role key used in a client component (leaks full DB access)
-- `.env` committed to git at some point (even if later removed — it's in history)
+- `.env` committed to git at some point (even if later removed. It's in history)
 
 #### 2.9 Server-Side Boundary Enforcement
 
 Verify that operations requiring server-side execution are actually server-side:
 
-- [ ] Database mutations happen in server actions (`"use server"`) or API routes — never in client components
+- [ ] Database mutations happen in server actions (`"use server"`) or API routes. Never in client components
 - [ ] Supabase `service_role` client only created in server context
 - [ ] Third-party API calls with secret keys happen server-side only
-- [ ] File uploads validated server-side (type, size, content) — not just client checks
+- [ ] File uploads validated server-side (type, size, content). Not just client checks
 - [ ] Payment/billing logic is server-side (Stripe webhooks, not client-side confirmation)
 - [ ] Email sending is server-side only
 
@@ -252,10 +252,10 @@ If the project uses AI services (OpenAI, Anthropic, Replicate, Vercel AI SDK, et
 - Packages: `openai`, `@anthropic-ai/sdk`, `ai` (Vercel AI SDK), `replicate`, `@google/generative-ai`
 - Usage tracking: is there a `tokens_used` or `ai_requests` counter per user?
 - Limits: is there a check before calling AI? (`if (user.aiRequestsToday >= limit) return 429`)
-- Spending limits: provider dashboard config (can't verify locally — flag for manual check)
+- Spending limits: provider dashboard config (can't verify locally. Flag for manual check)
 
 **Common failures:**
-- No per-user limit on AI calls (one user can burn $1000 in API costs overnight) — CRITICAL
+- No per-user limit on AI calls (one user can burn $1000 in API costs overnight). CRITICAL
 - AI endpoint accessible without authentication (anyone can use your API key)
 - No input length validation (user sends 100k tokens, you pay for it)
 - AI response rendered with `dangerouslySetInnerHTML` (XSS via prompt injection)
@@ -326,7 +326,7 @@ Read all migration files (in order) and reconstruct the schema. Analyze:
 #### 4.2 Caching
 
 - [ ] Cache Components / `use cache` where the page mixes static shell and dynamic data (Next 16)
-- [ ] `revalidate` / `revalidateTag` / `updateTag` used correctly — not the deprecated single-arg `revalidateTag(tag)`
+- [ ] `revalidate` / `revalidateTag` / `updateTag` used correctly. Not the deprecated single-arg `revalidateTag(tag)`
 - [ ] Expensive computations memoized (`cache` from React, not `unstable_cache`)
 - [ ] API responses have appropriate Cache-Control headers
 - [ ] TanStack Query only for client-timeline data (polling, infinite, shared cache); initial paint from Server Components
@@ -339,12 +339,18 @@ Read all migration files (in order) and reconstruct the schema. Analyze:
 - [ ] `"use client"` boundary is as low as possible in the tree
 - [ ] Fonts loaded via `next/font` (not external CSS)
 
+#### 4.5 Gotchas that keep coming back
+
+- [ ] Hero / LCP is visible on the first frame. No `opacity: 0` and no `autoAlpha: 0` on that element. GSAP goes through `useGSAP` from `@gsap/react`, not `useLayoutEffect` plus `gsap.context`.
+- [ ] The font loader from `next/font` runs at module scope, one family, applied on `<html>`. It is not called inside a component, and there is no Google Fonts `<link>`.
+- [ ] `cookies()` and `headers()` sit behind `connection()` from `next/server`, or the request value is an argument to a `"use cache"` function. `cookies()` is not called inside `"use cache"`. `unstable_cache` and a blanket `export const dynamic = "force-dynamic"` are legacy.
+
 #### 4.4 Database Performance
 
 - [ ] Queries that could be slow at scale (full table scans, LIKE '%...%')
 - [ ] Missing indexes for common query patterns (identified in Phase 3)
 - [ ] Realtime subscriptions on appropriate tables only (not everything)
-- [ ] Connection pooling configured (Supabase uses PgBouncer — check if `?pgbouncer=true` is used where needed)
+- [ ] Connection pooling configured (Supabase uses PgBouncer. Check if `?pgbouncer=true` is used where needed)
 
 ### Phase 5: Scalability & Strategy
 
@@ -368,14 +374,14 @@ If the app has multi-user/org patterns, assess:
 
 Based on the audit findings, provide recommendations on:
 
-- **Stay on Vercel + Supabase** — when current usage fits free/pro tier limits
-- **Upgrade tiers** — when approaching limits but architecture is fine
-- **Move to VPS + Docker** — when:
+- **Stay on Vercel + Supabase**: when current usage fits free/pro tier limits
+- **Upgrade tiers**: when approaching limits but architecture is fine
+- **Move to VPS + Docker**: when:
   - Supabase costs exceed self-hosted PostgreSQL
   - Need persistent background workers
   - Need more control over DB (extensions, custom configs)
   - Volume of data makes Supabase pricing prohibitive
-- **Hybrid approach** — Vercel for frontend, VPS for API/workers/DB
+- **Hybrid approach**: Vercel for frontend, VPS for API/workers/DB
 
 For VPS recommendations, include:
 - Suggested architecture (Docker Compose, volumes, backup strategy)
@@ -394,7 +400,7 @@ For VPS recommendations, include:
 #### 5.5 High Availability Considerations
 
 - Vercel: already multi-region by default (note limitations)
-- Supabase: single-region by default — recommend read replicas if needed
+- Supabase: single-region by default. Recommend read replicas if needed
 - Point-in-time recovery configured?
 - Backup strategy for user-uploaded files (Supabase Storage)
 - Graceful degradation if Supabase is down (queue writes, show cached data)
@@ -475,9 +481,9 @@ A project scoring 80+ is in good shape. Below 60 needs significant work. Below 4
 
 - Does NOT connect to live Supabase instances
 - Does NOT run the project or make HTTP requests
-- Does NOT modify any code (audit only — fixes are separate)
+- Does NOT modify any code (audit only. Fixes are separate)
 - Does NOT check deployed Vercel configuration (only local vercel.json)
 - Does NOT run tests or build the project
 
 If the user wants fixes applied after the audit, that's a separate
-pass — this skill is read-only.
+pass. This skill is read-only.
